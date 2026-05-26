@@ -1,150 +1,78 @@
 # 债券数据
 
-## 可转债实时行情
+本文件仅说明可转债、债券查询和收益率曲线相关数据如何获取。
+
+## 任务路由
+
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| 可转债快照 | 获取可转债实时行情 | `bond_zh_hs_cov_spot` |
+| 可转债历史 | 获取可转债日线 | `bond_zh_hs_cov_daily` |
+| 强赎数据 | 获取强赎列表 | `bond_cb_redeem_jsl` |
+| 债券检索 | 查询债券基础信息 | `bond_info_cm` |
+| 国债收益率 | 获取中美国债收益率数据 | `bond_zh_us_rate` |
+| 收益率曲线 | 获取中国债券收益率曲线 | `bond_china_yield` |
+| 可转债资料 | 获取可转债详细信息 | `bond_cb_profile_sina` |
+
+## 高频接口
 
 ### bond_zh_hs_cov_spot
 
-描述：可转债实时行情
-
-输入参数：无
-
-输出参数：代码、名称、最新价、涨跌幅 等
-
-```python
-import akshare as ak
-df = ak.bond_zh_hs_cov_spot()
-```
-
----
-
-## 可转债历史行情
+用途：获取可转债实时行情。
 
 ### bond_zh_hs_cov_daily
 
-描述：可转债历史行情数据
+用途：获取可转债历史日线。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 可转债代码，如 "sz128039" (需带市场前缀 sh/sz) |
-
-```python
-import akshare as ak
-df = ak.bond_zh_hs_cov_daily(symbol="sz128039")
-```
-
----
-
-## 可转债强赎
+| symbol | str | 带市场前缀的可转债代码，如 `sz128039` |
 
 ### bond_cb_redeem_jsl
 
-描述：集思录-可转债强赎数据
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.bond_cb_redeem_jsl()
-```
-
----
-
-## 债券查询
+用途：获取可转债强赎数据。
 
 ### bond_info_cm
 
-描述：中国外汇交易中心-债券信息查询
+用途：按名称、代码、类型或年份查询债券信息。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| bond_name | str | 债券名称（可为空） |
-| bond_code | str | 债券代码（可为空） |
-| bond_type | str | 债券类型，如 "短期融资券"（可为空） |
-| issue_year | str | 发行年份，如 "2024"（可为空） |
-
-```python
-import akshare as ak
-df = ak.bond_info_cm(bond_name="", bond_type="短期融资券", issue_year="2024")
-```
-
----
-
-## 国债收益率
+| bond_name | str | 债券名称，可为空 |
+| bond_code | str | 债券代码，可为空 |
+| bond_type | str | 债券类型，可为空 |
+| issue_year | str | 发行年份，可为空 |
 
 ### bond_zh_us_rate
 
-描述：中国-美国国债收益率数据
-
-输入参数：
+用途：获取中美国债收益率数据。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| start_date | str | "20240101" |
-
-输出参数：日期、中国国债2Y/5Y/10Y/30Y、美国国债2Y/5Y/10Y/30Y 等
-
-```python
-import akshare as ak
-df = ak.bond_zh_us_rate(start_date="20240101")
-```
-
----
-
-## 中国债券收益率曲线
+| start_date | str | `YYYYMMDD` |
 
 ### bond_china_yield
 
-描述：中国债券信息网-国债收益率曲线
-
-输入参数：
+用途：获取中国债券收益率曲线。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| date | str | "20241220" |
-
-```python
-import akshare as ak
-df = ak.bond_china_yield(date="20241220")
-```
-
----
-
-## 可转债基本信息
+| date | str | `YYYYMMDD` |
 
 ### bond_cb_profile_sina
 
-描述：新浪-可转债详细信息
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 可转债代码，如 "128039" |
-
-```python
-import akshare as ak
-df = ak.bond_cb_profile_sina(symbol="128039")
-```
-
----
-
-## 债券市场概览
+用途：获取可转债基本信息。
 
 ### bond_deal_summary_sse
 
-描述：上交所-债券成交概览
+用途：获取上交所债券成交概览。
 
-输入参数：
+## 常见坑
 
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| date | str | 日期，如 "20241220" |
-
-```python
-import akshare as ak
-df = ak.bond_deal_summary_sse(date="20241220")
-```
+1. 可转债历史接口通常要求带市场前缀。
+2. 收益率曲线和收益率历史是不同口径的数据。
+3. 债券查询接口常返回较大结果集，建议筛字段输出。

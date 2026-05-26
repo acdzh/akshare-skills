@@ -14,13 +14,47 @@ ROOT = Path(__file__).resolve().parent.parent
 TASK_PLAYBOOKS = ROOT / "registry" / "task_playbooks.json"
 INTERFACE_CATALOG = ROOT / "registry" / "interface_catalog.json"
 DOC_EXPECTATIONS = {
+    "docs/bank.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/bond.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/currency.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/energy.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
     "docs/stock.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
     "docs/fund.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/futures.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/fx.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/index.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/interest_rate.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
     "docs/macro.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
     "docs/news_sentiment.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/option.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
+    "docs/spot.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
     "docs/technical_analysis.md": ["## 任务路由", "## 高频指标", "## 常见坑"],
     "docs/fundamental_analysis.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
 }
+FORBIDDEN_TEXT = [
+    "结论输出建议",
+    "回答协议",
+    "操作建议",
+    "置信度",
+    "失效条件",
+    "推荐顺序",
+    "适合场景",
+    "候选列表",
+    "市场结论",
+    "关注方向",
+    "图表规则",
+    "可视化图表",
+    "筛选决策",
+    "市场研判",
+    "stock_screening.md",
+    "visualization.md",
+    "market_regime",
+    "macro_environment",
+]
+FORBIDDEN_SCAN_FILES = [
+    ROOT / "SKILL.md",
+    ROOT / "registry" / "task_playbooks.json",
+] + [ROOT / relative_path for relative_path in DOC_EXPECTATIONS]
 
 
 def load_json(path: Path) -> Any:
@@ -129,6 +163,18 @@ def validate_docs_structure() -> list[str]:
     return errors
 
 
+def validate_forbidden_text() -> list[str]:
+    errors: list[str] = []
+    for file_path in FORBIDDEN_SCAN_FILES:
+        require(file_path.exists(), f"缺少文件: {file_path.relative_to(ROOT)}", errors)
+        if not file_path.exists():
+            continue
+        content = file_path.read_text(encoding="utf-8")
+        for text in FORBIDDEN_TEXT:
+            require(text not in content, f"{file_path.relative_to(ROOT)} 包含禁词或禁用引用: {text}", errors)
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate AKShare skill registries.")
     parser.add_argument("--strict-interfaces", action="store_true", help="将运行时缺失接口视为错误而不是警告。")
@@ -147,6 +193,7 @@ def main() -> int:
     interface_names = [item["function"] for item in interface_data.get("interfaces", []) if isinstance(item, dict) and item.get("function")]
     structural_errors.extend(validate_playbooks(task_data, set(interface_names)))
     structural_errors.extend(validate_docs_structure())
+    structural_errors.extend(validate_forbidden_text())
 
     runtime_errors, runtime_warnings = validate_runtime_interfaces(interface_names, strict=args.strict_interfaces)
 

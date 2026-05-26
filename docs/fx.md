@@ -1,90 +1,45 @@
 # 外汇数据
 
-## 外汇实时行情
+本文件仅说明外汇实时行情、历史行情、人民币汇率和中间价数据如何获取。
+
+## 任务路由
+
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| 外汇快照 | 获取货币对实时行情 | `forex_spot_em` |
+| 外汇历史 | 获取货币对历史行情 | `forex_hist_em` |
+| 银行牌价 | 获取中行外汇牌价 | `currency_boc_safe` |
+| 人民币中间价 | 获取人民币中间价 | `macro_china_rmb` |
+
+## 高频接口
 
 ### forex_spot_em
 
-描述：东方财富-外汇市场所有汇率实时行情
+用途：获取外汇市场实时行情。
 
-输入参数：无
-
-输出参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| 代码 | object | 货币对代码，如 USDJPY |
-| 名称 | object | 如 "美元兑日元" |
-| 最新价 | float64 | - |
-| 涨跌额 | float64 | - |
-| 涨跌幅 | float64 | - |
-| 今开 | float64 | - |
-| 最高 | float64 | - |
-| 最低 | float64 | - |
-| 昨收 | float64 | - |
-
-```python
-import akshare as ak
-df = ak.forex_spot_em()
-```
-
----
-
-## 外汇历史行情
+关键字段：`代码`、`名称`、`最新价`、`涨跌额`、`涨跌幅`、`今开`、`最高`、`最低`、`昨收`
 
 ### forex_hist_em
 
-描述：东方财富-外汇历史行情
-
-输入参数：
+用途：获取货币对历史行情。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 货币对代码，如 "USDCNH"(美元/离岸人民币)、"EURUSD"(欧元/美元) |
-
-输出参数：日期、开盘、收盘、最高、最低
-
-```python
-import akshare as ak
-df = ak.forex_hist_em(symbol="USDCNH")
-```
-
----
-
-## 人民币汇率
+| symbol | str | 货币对代码，如 `USDCNH`、`EURUSD` |
 
 ### currency_boc_safe
 
-描述：中国银行外汇牌价
-
-输入参数：
+用途：获取中国银行外汇牌价。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 币种，如 "美元"、"欧元"、"日元"、"英镑" |
-| start_date | str | "20240101" |
-| end_date | str | "20241231" |
-
-```python
-import akshare as ak
-df = ak.currency_boc_safe(symbol="美元", start_date="20240101", end_date="20241231")
-```
-
----
-
-## 人民币中间价
+| symbol | str | 币种，如 `美元`、`欧元` |
+| start_date | str | `YYYYMMDD` |
+| end_date | str | `YYYYMMDD` |
 
 ### macro_china_rmb
 
-描述：人民币汇率中间价数据
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.macro_china_rmb()
-```
-
----
+用途：获取人民币汇率中间价数据。
 
 ## 常用货币对代码
 
@@ -96,6 +51,9 @@ df = ak.macro_china_rmb()
 | USDJPY | 美元/日元 |
 | GBPUSD | 英镑/美元 |
 | AUDUSD | 澳元/美元 |
-| USDCHF | 美元/瑞郎 |
-| USDCAD | 美元/加元 |
-| USDHKD | 美元/港币 |
+
+## 常见坑
+
+1. 外汇货币对代码通常为大写英文。
+2. 银行牌价和市场交易价不是同一口径。
+3. 历史行情接口的日期字段格式可能与其他市场不同。

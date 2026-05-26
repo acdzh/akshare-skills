@@ -1,90 +1,69 @@
 # 指数数据
 
-## 指数实时行情
+本文件仅说明指数相关数据如何获取，以及指数代码、历史序列、成份股和权重数据的基本口径。
+
+## 任务路由
+
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| 指数快照 | 获取指数实时行情 | `stock_zh_index_spot_em` |
+| 历史指数 | 获取指数历史日线、周线、月线 | `index_zh_a_hist` / `stock_zh_index_daily` |
+| 成份股 | 获取指数成份股列表 | `index_stock_cons` |
+| 权重 | 获取成份股权重 | `index_stock_cons_weight_csindex` |
+
+## 高频接口
 
 ### stock_zh_index_spot_em
 
-描述：东方财富-沪深京指数实时行情
+用途：获取指数实时行情。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | "沪深重要指数"/"上证系列指数"/"深证系列指数"/"指数成份"/"中证系列指数" |
+| symbol | str | `沪深重要指数` / `上证系列指数` / `深证系列指数` / `指数成份` / `中证系列指数` |
 
-输出参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| 代码 | object | - |
-| 名称 | object | - |
-| 最新价 | float64 | - |
-| 涨跌额 | float64 | - |
-| 涨跌幅 | float64 | 单位: % |
-| 成交量 | float64 | - |
-| 成交额 | float64 | - |
-
-```python
-import akshare as ak
-df = ak.stock_zh_index_spot_em(symbol="沪深重要指数")
-```
-
----
-
-## 指数历史行情
+关键字段：`代码`、`名称`、`最新价`、`涨跌额`、`涨跌幅`、`成交量`、`成交额`
 
 ### index_zh_a_hist
 
-描述：东方财富-A 股指数历史行情
+用途：获取 A 股指数历史行情。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 指数代码，如 "000001"(上证指数)、"399001"(深证成指)、"399006"(创业板指) |
-| period | str | "daily"/"weekly"/"monthly" |
-| start_date | str | "20240101" |
-| end_date | str | "20241231" |
-
-输出参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| 日期 | object | - |
-| 开盘 | float64 | - |
-| 收盘 | float64 | - |
-| 最高 | float64 | - |
-| 最低 | float64 | - |
-| 成交量 | int64 | - |
-| 成交额 | float64 | - |
-| 振幅 | float64 | 单位: % |
-| 涨跌幅 | float64 | 单位: % |
-| 涨跌额 | float64 | - |
-| 换手率 | float64 | 单位: % |
-
-```python
-import akshare as ak
-df = ak.index_zh_a_hist(symbol="000001", period="daily", start_date="20240101", end_date="20241231")
-```
+| symbol | str | 指数代码，如 `000001`、`399001`、`000300` |
+| period | str | `daily` / `weekly` / `monthly` |
+| start_date | str | `YYYYMMDD` |
+| end_date | str | `YYYYMMDD` |
 
 ### stock_zh_index_daily
 
-描述：新浪-股票指数历史数据（日频率）
+用途：获取新浪口径指数日线。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 指数代码，需带前缀如 "sh000001"(上证指数)、"sz399001"(深证成指) |
+| symbol | str | 带市场前缀的代码，如 `sh000001`、`sz399001` |
 
-输出参数：date, open, high, low, close, volume
+### index_stock_cons
 
-```python
-import akshare as ak
-df = ak.stock_zh_index_daily(symbol="sh000001")
-```
+用途：获取指数成份股列表。
 
----
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| symbol | str | 指数代码，如 `000300` |
+
+### index_stock_cons_weight_csindex
+
+用途：获取中证指数成份股权重。
+
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| symbol | str | 指数代码，如 `000300` |
+| start_date | str | `YYYYMMDD` |
 
 ## 常用指数代码
 
@@ -97,39 +76,9 @@ df = ak.stock_zh_index_daily(symbol="sh000001")
 | 000016 | 上证50 |
 | 000905 | 中证500 |
 | 000852 | 中证1000 |
-| 399303 | 国证2000 |
 
----
+## 常见坑
 
-## 指数成份股
-
-### index_stock_cons
-
-描述：指数成份股列表
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 指数代码，如 "000300" |
-
-```python
-import akshare as ak
-df = ak.index_stock_cons(symbol="000300")
-```
-
-### index_stock_cons_weight_csindex
-
-描述：中证指数-指数成份股权重
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 指数代码，如 "000300" |
-| start_date | str | "20240101" |
-
-```python
-import akshare as ak
-df = ak.index_stock_cons_weight_csindex(symbol="000300", start_date="20240101")
-```
+1. 指数代码格式在不同接口中可能不同，有的需要前缀，有的不需要。
+2. 实时指数和历史指数接口字段名称不完全一致。
+3. 成份股和权重数据通常有发布日期滞后。

@@ -6,7 +6,7 @@ keywords: "akshare, finance, stock, fund, futures, macro, indices, bonds, option
 
 # AKShare 金融数据获取
 
-当用户需要查询金融数据、历史序列、财务指标、消息资讯、基金信息、宏观指标等内容时，使用 [AKShare](https://github.com/akfamily/akshare) 获取并整理数据。此 skill 仅负责数据获取、字段说明、口径说明和必要的数据清洗，不负责市场研判、筛选决策或图表表达。
+当用户需要查询金融数据、历史序列、财务指标、消息资讯、基金信息、宏观指标等内容时，使用 [AKShare](https://github.com/akfamily/akshare) 获取并整理数据。此 skill 仅负责数据获取、字段说明、口径说明和必要的数据清洗，不负责行情解读、标的选择或图形输出。
 
 ## 适用范围
 
