@@ -1,41 +1,56 @@
 # 现货数据
 
-本文件仅说明现货实时行情、历史行情、黄金白银基准价和部分商品现货对照数据如何获取。
+本文件仅说明上海黄金交易所现货、现货历史、现货品种表和期现对照数据如何获取。
 
 ## 任务路由
 
 | 数据需求 | 目标 | 优先接口 |
 |------|------|----------|
-| 现货快照 | 获取现货实时行情 | `spot_em` |
-| 现货历史 | 获取现货历史行情 | `spot_hist_em` |
-| 黄金基准价 | 获取上海黄金交易所黄金基准价 | `spot_golden_benchmark_sge` |
-| 白银基准价 | 获取上海黄金交易所白银基准价 | `spot_silver_benchmark_sge` |
+| SGE 实时行情 | 获取上海黄金交易所实时行情 | `spot_quotations_sge` |
+| SGE 历史行情 | 获取上海黄金交易所历史行情 | `spot_hist_sge` |
+| SGE 品种表 | 获取上海黄金交易所品种清单 | `spot_symbol_table_sge` |
+| 现货走势 | 获取 99 期货现货走势 | `spot_price_qh` |
+| 品种对照表 | 获取 99 期货现货品种表 | `spot_price_table_qh` |
+| 黄金/白银基准价 | 获取基准价数据 | `spot_golden_benchmark_sge` / `spot_silver_benchmark_sge` |
 | 期现对照 | 获取期货与现货对照价格 | `futures_spot_sys` |
 
 ## 高频接口
 
-### spot_em
+### spot_quotations_sge
 
-用途：获取现货实时行情。
-
-### spot_hist_em
-
-用途：获取现货历史行情。
+用途：获取上海黄金交易所实时行情。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 现货品种代码 |
-| period | str | `daily` / `weekly` / `monthly` |
-| start_date | str | `YYYYMMDD` |
-| end_date | str | `YYYYMMDD` |
+| symbol | str | 品种代码，如 `Au99.99` |
 
-### spot_golden_benchmark_sge
+### spot_hist_sge
 
-用途：获取黄金基准价。
+用途：获取上海黄金交易所历史行情。
 
-### spot_silver_benchmark_sge
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| symbol | str | 品种代码，如 `Au99.99` |
 
-用途：获取白银基准价。
+### spot_symbol_table_sge
+
+用途：获取上海黄金交易所品种表。
+
+### spot_price_qh
+
+用途：获取 99 期货现货走势。
+
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| symbol | str | 品种名称，如 `螺纹钢` |
+
+### spot_price_table_qh
+
+用途：获取 99 期货现货品种对照表。
+
+### spot_golden_benchmark_sge / spot_silver_benchmark_sge
+
+用途：获取黄金和白银基准价。
 
 ### futures_spot_sys
 
@@ -43,6 +58,6 @@
 
 ## 常见坑
 
-1. 现货品种代码和期货代码不是同一套命名。
+1. 上海黄金交易所行情和 99 期货现货走势不是同一来源。
 2. 基准价和市场成交价不是同一口径。
-3. 历史行情接口返回频率依赖具体品种。
+3. 现货品种代码和期货代码不是同一套命名。

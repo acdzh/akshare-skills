@@ -10,6 +10,7 @@ BRANCH="main"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 RAW_DOCS_DIR="$PROJECT_ROOT/akshare_docs"
+SOURCE_VERSION_FILE="$RAW_DOCS_DIR/.source_version"
 TMP_DIR=$(mktemp -d)
 
 cleanup() {
@@ -22,12 +23,19 @@ echo "正在从 akshare 仓库下载上游 docs..."
 git clone --depth 1 --filter=blob:none --sparse "$REPO_URL" --branch "$BRANCH" "$TMP_DIR/akshare"
 cd "$TMP_DIR/akshare"
 git sparse-checkout set docs
+UPSTREAM_COMMIT="$(git rev-parse HEAD)"
 
 echo "正在同步到本地 akshare_docs..."
 
 rm -rf "$RAW_DOCS_DIR"
 mkdir -p "$RAW_DOCS_DIR"
 cp -r "$TMP_DIR/akshare/docs/." "$RAW_DOCS_DIR/"
+cat > "$SOURCE_VERSION_FILE" <<EOF
+repo=$REPO_URL
+branch=$BRANCH
+commit=$UPSTREAM_COMMIT
+synced_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+EOF
 
 echo "正在运行结构校验..."
 python3 "$PROJECT_ROOT/scripts/validate_skill_docs.py"

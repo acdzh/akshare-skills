@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import inspect
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -13,6 +14,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 TASK_PLAYBOOKS = ROOT / "registry" / "task_playbooks.json"
 INTERFACE_CATALOG = ROOT / "registry" / "interface_catalog.json"
+SYMBOL_FORMATS = ROOT / "registry" / "symbol_formats.json"
+FIELD_GLOSSARY = ROOT / "registry" / "field_glossary.json"
 DOC_EXPECTATIONS = {
     "docs/bank.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
     "docs/bond.md": ["## 任务路由", "## 高频接口", "## 常见坑"],
@@ -65,6 +68,10 @@ def load_json(path: Path) -> Any:
 def require(condition: bool, message: str, errors: list[str]) -> None:
     if not condition:
         errors.append(message)
+
+
+def load_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
 
 
 def validate_playbooks(data: dict[str, Any], known_interfaces: set[str]) -> list[str]:
@@ -126,6 +133,58 @@ def validate_interface_catalog(data: dict[str, Any]) -> tuple[list[str], list[st
     return errors, warnings
 
 
+def validate_symbol_formats(data: dict[str, Any], known_interfaces: set[str]) -> list[str]:
+    errors: list[str] = []
+    formats = data.get("formats")
+    require(isinstance(formats, list) and formats, "symbol_formats.json 缺少非空 formats 列表", errors)
+    if not isinstance(formats, list):
+        return errors
+
+    seen_names: set[str] = set()
+    for item in formats:
+        name = item.get("name")
+        require(isinstance(name, str) and name, "symbol_formats.json 存在缺少 name 的项", errors)
+        if not isinstance(name, str) or not name:
+            continue
+        require(name not in seen_names, f"symbol format 重复: {name}", errors)
+        seen_names.add(name)
+
+        for key in ("pattern", "description"):
+            require(isinstance(item.get(key), str) and item.get(key), f"{name} 缺少字符串字段: {key}", errors)
+
+        for key in ("examples", "used_by"):
+            value = item.get(key)
+            require(isinstance(value, list) and value, f"{name} 缺少非空列表字段: {key}", errors)
+
+        for interface_name in item.get("used_by", []):
+            require(interface_name in known_interfaces, f"{name} 引用了未登记接口: {interface_name}", errors)
+    return errors
+
+
+def validate_field_glossary(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    fields = data.get("fields")
+    require(isinstance(fields, list) and fields, "field_glossary.json 缺少非空 fields 列表", errors)
+    if not isinstance(fields, list):
+        return errors
+
+    seen_fields: set[str] = set()
+    for item in fields:
+        field = item.get("field")
+        require(isinstance(field, str) and field, "field_glossary.json 存在缺少 field 的项", errors)
+        if not isinstance(field, str) or not field:
+            continue
+        require(field not in seen_fields, f"字段词典重复: {field}", errors)
+        seen_fields.add(field)
+
+        for key in ("category", "meaning"):
+            require(isinstance(item.get(key), str) and item.get(key), f"{field} 缺少字符串字段: {key}", errors)
+
+        for key in ("common_units", "notes"):
+            require(isinstance(item.get(key), list), f"{field} 字段必须是列表: {key}", errors)
+    return errors
+
+
 def validate_runtime_interfaces(interface_names: list[str], strict: bool) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -163,13 +222,38 @@ def validate_docs_structure() -> list[str]:
     return errors
 
 
+INTERFACE_HEADER_RE = re.compile(r"^###\s+([a-z0-9_]+(?:\s*/\s*[a-z0-9_]+)*)\s*$")
+
+
+def extract_doc_interfaces(content: str) -> set[str]:
+    interfaces: set[str] = set()
+    for line in content.splitlines():
+        match = INTERFACE_HEADER_RE.match(line.strip())
+        if not match:
+            continue
+        for item in match.group(1).split("/"):
+            interfaces.add(item.strip())
+    return interfaces
+
+
+def validate_doc_interface_coverage(known_interfaces: set[str]) -> list[str]:
+    errors: list[str] = []
+    for relative_path in DOC_EXPECTATIONS:
+        doc_path = ROOT / relative_path
+        if not doc_path.exists():
+            continue
+        for interface_name in sorted(extract_doc_interfaces(load_text(doc_path))):
+            require(interface_name in known_interfaces, f"{relative_path} 中的接口未登记到 catalog: {interface_name}", errors)
+    return errors
+
+
 def validate_forbidden_text() -> list[str]:
     errors: list[str] = []
     for file_path in FORBIDDEN_SCAN_FILES:
         require(file_path.exists(), f"缺少文件: {file_path.relative_to(ROOT)}", errors)
         if not file_path.exists():
             continue
-        content = file_path.read_text(encoding="utf-8")
+        content = load_text(file_path)
         for text in FORBIDDEN_TEXT:
             require(text not in content, f"{file_path.relative_to(ROOT)} 包含禁词或禁用引用: {text}", errors)
     return errors
@@ -182,6 +266,8 @@ def main() -> int:
 
     task_data = load_json(TASK_PLAYBOOKS)
     interface_data = load_json(INTERFACE_CATALOG)
+    symbol_data = load_json(SYMBOL_FORMATS)
+    glossary_data = load_json(FIELD_GLOSSARY)
 
     structural_errors: list[str] = []
     structural_warnings: list[str] = []
@@ -191,8 +277,12 @@ def main() -> int:
     structural_warnings.extend(interface_warnings)
 
     interface_names = [item["function"] for item in interface_data.get("interfaces", []) if isinstance(item, dict) and item.get("function")]
-    structural_errors.extend(validate_playbooks(task_data, set(interface_names)))
+    known_interfaces = set(interface_names)
+    structural_errors.extend(validate_playbooks(task_data, known_interfaces))
+    structural_errors.extend(validate_symbol_formats(symbol_data, known_interfaces))
+    structural_errors.extend(validate_field_glossary(glossary_data))
     structural_errors.extend(validate_docs_structure())
+    structural_errors.extend(validate_doc_interface_coverage(known_interfaces))
     structural_errors.extend(validate_forbidden_text())
 
     runtime_errors, runtime_warnings = validate_runtime_interfaces(interface_names, strict=args.strict_interfaces)
@@ -200,6 +290,8 @@ def main() -> int:
     print("== 结构化校验结果 ==")
     print(f"playbooks: {len(task_data.get('playbooks', []))}")
     print(f"interfaces: {len(interface_names)}")
+    print(f"symbol_formats: {len(symbol_data.get('formats', []))}")
+    print(f"field_glossary: {len(glossary_data.get('fields', []))}")
 
     if structural_warnings:
         print("\n[WARN]")

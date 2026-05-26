@@ -1107,6 +1107,1438 @@
         "适合做背景判断，不适合解释短线行情"
       ],
       "fallback": []
+    },
+    {
+      "function": "rate_interbank",
+      "asset_class": "rate",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "通过 market、symbol、indicator 指定口径。",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "利率"
+      ],
+      "freshness": "银行间利率序列。",
+      "cost": "low",
+      "pitfalls": [
+        "参数组合共同决定口径"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_cb_profile_sina",
+      "asset_class": "bond",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "可转债代码。",
+      "date_format": "无",
+      "key_fields": [
+        "债券代码",
+        "债券简称",
+        "正股代码",
+        "转股价"
+      ],
+      "freshness": "可转债资料。",
+      "cost": "low",
+      "pitfalls": [
+        "资料字段可能较多"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_cb_redeem_jsl",
+      "asset_class": "bond",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无或按接口参数指定。",
+      "date_format": "无",
+      "key_fields": [
+        "债券代码",
+        "债券简称",
+        "强赎状态"
+      ],
+      "freshness": "强赎列表。",
+      "cost": "low",
+      "pitfalls": [
+        "强赎状态随时间变化"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_china_yield",
+      "asset_class": "bond",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "期限",
+        "到期收益率"
+      ],
+      "freshness": "收益率曲线快照。",
+      "cost": "low",
+      "pitfalls": [
+        "不同期限是同日截面数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_deal_summary_sse",
+      "asset_class": "bond",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "品种",
+        "成交额",
+        "成交量"
+      ],
+      "freshness": "债券成交概览。",
+      "cost": "low",
+      "pitfalls": [
+        "为汇总数据，不是逐笔明细"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_info_cm",
+      "asset_class": "bond",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "通过名称、代码或类型查询。",
+      "date_format": "按发行年份等参数查询。",
+      "key_fields": [
+        "债券代码",
+        "债券名称",
+        "债券类型"
+      ],
+      "freshness": "债券基础资料。",
+      "cost": "low",
+      "pitfalls": [
+        "结果集可能较大"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_zh_hs_cov_daily",
+      "asset_class": "bond",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "带市场前缀的小写代码，如 sz128039。",
+      "date_format": "接口返回历史日线。",
+      "key_fields": [
+        "date",
+        "open",
+        "close",
+        "high",
+        "low",
+        "volume"
+      ],
+      "freshness": "可转债历史日线。",
+      "cost": "medium",
+      "pitfalls": [
+        "symbol 需要市场前缀"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bond_zh_hs_cov_spot",
+      "asset_class": "bond",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回可转债快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "可转债实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中数据会变化"
+      ],
+      "fallback": [
+        "bond_zh_hs_cov_daily"
+      ]
+    },
+    {
+      "function": "bond_zh_us_rate",
+      "asset_class": "bond",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "start_date 为 YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "中国国债收益率",
+        "美国国债收益率"
+      ],
+      "freshness": "中美国债收益率历史。",
+      "cost": "low",
+      "pitfalls": [
+        "中美期限字段需单独核对"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "crypto_bitcoin_hold_report",
+      "asset_class": "crypto",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "持仓量"
+      ],
+      "freshness": "比特币持仓报告。",
+      "cost": "low",
+      "pitfalls": [
+        "并非价格数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "energy_carbon_domestic",
+      "asset_class": "energy",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "中文市场名称，如 全国、湖北。",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "开盘价",
+        "收盘价",
+        "成交量"
+      ],
+      "freshness": "碳市场交易数据。",
+      "cost": "low",
+      "pitfalls": [
+        "symbol 为市场名称而非代码"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "energy_oil_detail",
+      "asset_class": "energy",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "地区",
+        "92号汽油",
+        "95号汽油",
+        "98号汽油"
+      ],
+      "freshness": "地区油价数据。",
+      "cost": "low",
+      "pitfalls": [
+        "地区字段不是交易代码"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "energy_oil_hist",
+      "asset_class": "energy",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "调整日期",
+        "汽油价格",
+        "柴油价格"
+      ],
+      "freshness": "油价调价历史。",
+      "cost": "low",
+      "pitfalls": [
+        "是调价记录，不是连续市场价格"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hk_hist",
+      "asset_class": "stock",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "港股纯数字代码，如 00700。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "港股历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "代码前导零需要保留"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hk_spot_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回港股快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "港股实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中数据会变化"
+      ],
+      "fallback": [
+        "stock_hk_hist"
+      ]
+    },
+    {
+      "function": "stock_individual_fund_flow",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "stock 为股票代码，market 为 sh 或 sz。",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "主力净流入",
+        "超大单净流入"
+      ],
+      "freshness": "个股资金流明细。",
+      "cost": "medium",
+      "pitfalls": [
+        "market 参数需要和代码市场匹配"
+      ],
+      "fallback": [
+        "stock_individual_fund_flow_rank"
+      ]
+    },
+    {
+      "function": "stock_us_hist",
+      "asset_class": "stock",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "带市场前缀的美股代码，如 105.AAPL。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "美股历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "代码格式需通过快照接口确认"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_us_spot_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回美股快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "美股实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "代码通常带市场前缀"
+      ],
+      "fallback": [
+        "stock_us_hist"
+      ]
+    },
+    {
+      "function": "fund_portfolio_bond_hold_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_data"
+      ],
+      "symbol_format": "基金代码。",
+      "date_format": "按报告期年份查询。",
+      "key_fields": [
+        "债券代码",
+        "债券名称",
+        "持仓市值",
+        "占净值比例"
+      ],
+      "freshness": "债券持仓披露。",
+      "cost": "medium",
+      "pitfalls": [
+        "持仓存在披露滞后"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_contract_detail",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "期货合约代码。",
+      "date_format": "无",
+      "key_fields": [
+        "合约代码",
+        "交易单位",
+        "最小变动价位"
+      ],
+      "freshness": "合约基础资料。",
+      "cost": "low",
+      "pitfalls": [
+        "字段依赖交易所口径"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_dce_position_rank",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "按品种和日期查询。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "排名",
+        "会员简称",
+        "持仓量"
+      ],
+      "freshness": "持仓排名数据。",
+      "cost": "medium",
+      "pitfalls": [
+        "为交易所排名口径"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_fees_info",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "无",
+      "key_fields": [
+        "合约",
+        "手续费标准"
+      ],
+      "freshness": "手续费信息。",
+      "cost": "low",
+      "pitfalls": [
+        "标准可能变化"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_foreign_commodity_realtime",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回国际商品期货快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "国际商品期货快照。",
+      "cost": "low",
+      "pitfalls": [
+        "品种命名口径与国内不同"
+      ],
+      "fallback": [
+        "futures_foreign_hist"
+      ]
+    },
+    {
+      "function": "futures_foreign_hist",
+      "asset_class": "futures",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "国际期货品种代码。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低"
+      ],
+      "freshness": "国际期货历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "品种代码需要查文档确认"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_global_spot_em",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回全球期货快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "全球期货快照。",
+      "cost": "low",
+      "pitfalls": [
+        "覆盖范围依数据源而定"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_hist_em",
+      "asset_class": "futures",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "期货合约代码。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "东财期货历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "不同交易所字段可能不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_inventory_em",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "按品种或日期查询。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "日期",
+        "库存"
+      ],
+      "freshness": "库存数据。",
+      "cost": "low",
+      "pitfalls": [
+        "库存频率依品种而不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_main_sina",
+      "asset_class": "futures",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "主力连续代码，如 RB0。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "主力连续历史。",
+      "cost": "medium",
+      "pitfalls": [
+        "主力连续与单合约不是同一口径"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_zh_daily_sina",
+      "asset_class": "futures",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "期货合约代码，如 RB2501。",
+      "date_format": "接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "国内期货单合约历史。",
+      "cost": "medium",
+      "pitfalls": [
+        "合约代码大小写需与交易所习惯一致"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_zh_minute_sina",
+      "asset_class": "futures",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "期货合约代码。",
+      "date_format": "分钟级时间序列。",
+      "key_fields": [
+        "时间",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "国内期货分钟行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "分钟周期需单独指定"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_zh_spot",
+      "asset_class": "futures",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回国内期货快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅",
+        "持仓量"
+      ],
+      "freshness": "国内期货实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中数据变化快"
+      ],
+      "fallback": [
+        "futures_zh_daily_sina"
+      ]
+    },
+    {
+      "function": "currency_boc_safe",
+      "asset_class": "fx",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "中文币种名称，如 美元、欧元。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "现汇买入价",
+        "现汇卖出价",
+        "中行折算价"
+      ],
+      "freshness": "中行外汇牌价。",
+      "cost": "low",
+      "pitfalls": [
+        "牌价与市场交易价不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "forex_hist_em",
+      "asset_class": "fx",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "大写货币对，如 USDCNH。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低"
+      ],
+      "freshness": "外汇历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "货币对代码需大写"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "forex_spot_em",
+      "asset_class": "fx",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回外汇快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "外汇实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "货币对通常为大写英文"
+      ],
+      "fallback": [
+        "forex_hist_em"
+      ]
+    },
+    {
+      "function": "macro_china_rmb",
+      "asset_class": "fx",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "中间价"
+      ],
+      "freshness": "人民币中间价历史。",
+      "cost": "low",
+      "pitfalls": [
+        "中间价与成交价不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "index_stock_cons",
+      "asset_class": "index",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "纯数字指数代码，如 000300。",
+      "date_format": "无",
+      "key_fields": [
+        "品种代码",
+        "品种名称"
+      ],
+      "freshness": "指数成份股列表。",
+      "cost": "low",
+      "pitfalls": [
+        "成份股列表存在更新日滞后"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "index_stock_cons_weight_csindex",
+      "asset_class": "index",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "纯数字指数代码，如 000300。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "成份券代码",
+        "成份券名称",
+        "权重"
+      ],
+      "freshness": "中证指数权重数据。",
+      "cost": "low",
+      "pitfalls": [
+        "权重按发布日更新"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_reserve_requirement_ratio",
+      "asset_class": "rate",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "大型金融机构",
+        "中小金融机构"
+      ],
+      "freshness": "存款准备金率历史。",
+      "cost": "low",
+      "pitfalls": [
+        "可能为事件驱动型变更"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_swap_rate",
+      "asset_class": "rate",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "利率互换"
+      ],
+      "freshness": "互换利率数据。",
+      "cost": "low",
+      "pitfalls": [
+        "具体期限列需要核对"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_consumer_goods_retail",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "前值"
+      ],
+      "freshness": "社零总额数据。",
+      "cost": "low",
+      "pitfalls": [
+        "多为月频数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_trade_balance",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "前值"
+      ],
+      "freshness": "贸易差额数据。",
+      "cost": "low",
+      "pitfalls": [
+        "与进出口同比是不同口径"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_comment_detail_zlkp_jgcyd_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "A 股纯数字代码，如 600519。",
+      "date_format": "历史序列。",
+      "key_fields": [
+        "日期",
+        "机构参与度"
+      ],
+      "freshness": "机构参与度历史。",
+      "cost": "low",
+      "pitfalls": [
+        "属于情绪类辅助数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_deal_xq",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "按榜单类型查询，如 最热门。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "热度"
+      ],
+      "freshness": "雪球交易热榜。",
+      "cost": "low",
+      "pitfalls": [
+        "平台榜单口径不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_follow_xq",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "按榜单类型查询，如 最热门。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "热度"
+      ],
+      "freshness": "雪球关注热榜。",
+      "cost": "low",
+      "pitfalls": [
+        "平台榜单口径不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_rank_latest_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "无单只 symbol，返回最新热门股票。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "热度"
+      ],
+      "freshness": "最新热门股票快照。",
+      "cost": "low",
+      "pitfalls": [
+        "热度快照更新频繁"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_search_baidu",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "date 为 YYYYMMDD。",
+      "key_fields": [
+        "代码",
+        "名称",
+        "搜索热度"
+      ],
+      "freshness": "百度热搜榜。",
+      "cost": "low",
+      "pitfalls": [
+        "是平台搜索热度，不是交易数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_tweet_xq",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "按榜单类型查询，如 最热门。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "热度"
+      ],
+      "freshness": "雪球讨论热榜。",
+      "cost": "low",
+      "pitfalls": [
+        "平台榜单口径不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "option_cffex_hs300_spot_sina",
+      "asset_class": "option",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "合约月份，如 2412。",
+      "date_format": "无",
+      "key_fields": [
+        "合约",
+        "最新价",
+        "涨跌幅"
+      ],
+      "freshness": "股指期权实时数据。",
+      "cost": "low",
+      "pitfalls": [
+        "月份参数需符合交易所规则"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "option_current_em",
+      "asset_class": "option",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回 ETF 期权快照。",
+      "date_format": "无",
+      "key_fields": [
+        "合约代码",
+        "最新价",
+        "涨跌幅",
+        "成交量"
+      ],
+      "freshness": "期权实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "不同期权市场字段差异较大"
+      ],
+      "fallback": [
+        "option_hist_em"
+      ]
+    },
+    {
+      "function": "option_risk_indicator_sse",
+      "asset_class": "option",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "date 为 YYYYMMDD。",
+      "key_fields": [
+        "合约代码",
+        "Delta",
+        "Gamma",
+        "Theta",
+        "Vega"
+      ],
+      "freshness": "期权风险指标。",
+      "cost": "low",
+      "pitfalls": [
+        "Greeks 多为日期截面数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "option_sse_list_sina",
+      "asset_class": "option",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "通过 symbol 指定 50ETF 或 300ETF。",
+      "date_format": "无",
+      "key_fields": [
+        "合约交易代码",
+        "行权价",
+        "到期日"
+      ],
+      "freshness": "期权合约列表。",
+      "cost": "low",
+      "pitfalls": [
+        "不同标的合约列表独立"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "futures_spot_sys",
+      "asset_class": "spot",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "按品种或日期查询。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "日期",
+        "现货价格",
+        "期货价格"
+      ],
+      "freshness": "期现对照数据。",
+      "cost": "low",
+      "pitfalls": [
+        "现货和期货口径不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "spot_golden_benchmark_sge",
+      "asset_class": "spot",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "价格"
+      ],
+      "freshness": "黄金基准价。",
+      "cost": "low",
+      "pitfalls": [
+        "基准价不是连续成交价"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "spot_silver_benchmark_sge",
+      "asset_class": "spot",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "价格"
+      ],
+      "freshness": "白银基准价。",
+      "cost": "low",
+      "pitfalls": [
+        "基准价不是连续成交价"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_board_industry_cons_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_data"
+      ],
+      "symbol_format": "行业名称，如 白酒。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价"
+      ],
+      "freshness": "行业成份股列表。",
+      "cost": "low",
+      "pitfalls": [
+        "行业名称需要先查可用列表"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_industry_pe_ratio_cninfo",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_data"
+      ],
+      "symbol_format": "行业分类口径名称。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "行业名称",
+        "市盈率"
+      ],
+      "freshness": "行业估值快照。",
+      "cost": "low",
+      "pitfalls": [
+        "需同时说明行业分类口径"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "bank_fjcf_table_detail",
+      "asset_class": "bank",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "通过 page、item、begin 指定分页和分类。",
+      "date_format": "无",
+      "key_fields": [
+        "处罚决定书文号",
+        "被处罚当事人",
+        "主要违法违规事实"
+      ],
+      "freshness": "行政处罚公开表。",
+      "cost": "low",
+      "pitfalls": [
+        "属于公开信息，不是行情数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "crypto_js_spot",
+      "asset_class": "crypto",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无单只 symbol，返回主流加密货币快照。",
+      "date_format": "无",
+      "key_fields": [
+        "名称",
+        "最新价",
+        "24h涨跌幅"
+      ],
+      "freshness": "加密货币实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "网络环境可能影响获取稳定性"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "crypto_bitcoin_cme",
+      "asset_class": "crypto",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "date 为 YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "成交量"
+      ],
+      "freshness": "比特币成交量报告。",
+      "cost": "low",
+      "pitfalls": [
+        "不是价格历史数据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_daily_energy",
+      "asset_class": "energy",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "库存"
+      ],
+      "freshness": "中国日度能源指标。",
+      "cost": "low",
+      "pitfalls": [
+        "字段口径依报告来源而变"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_energy_index",
+      "asset_class": "energy",
+      "scenarios": [
+        "macro_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "日期",
+        "指数值"
+      ],
+      "freshness": "能源指数。",
+      "cost": "low",
+      "pitfalls": [
+        "指数含义需结合来源说明"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "option_sse_daily_sina",
+      "asset_class": "option",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "上交所期权代码，如 10003889。",
+      "date_format": "接口返回历史序列。",
+      "key_fields": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "freshness": "上交所期权历史日线。",
+      "cost": "medium",
+      "pitfalls": [
+        "需要具体期权代码"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "option_hist_dce",
+      "asset_class": "option",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "商品期权品种名称，如 聚丙烯期权。",
+      "date_format": "trade_date 为 YYYYMMDD。",
+      "key_fields": [
+        "合约代码",
+        "开盘价",
+        "收盘价",
+        "成交量"
+      ],
+      "freshness": "大商所商品期权日度数据。",
+      "cost": "low",
+      "pitfalls": [
+        "symbol 使用中文品种名称而不是合约代码"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "option_hist_czce",
+      "asset_class": "option",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "商品期权品种名称，如 白糖期权。",
+      "date_format": "trade_date 为 YYYYMMDD。",
+      "key_fields": [
+        "合约代码",
+        "开盘价",
+        "收盘价",
+        "成交量"
+      ],
+      "freshness": "郑商所商品期权日度数据。",
+      "cost": "low",
+      "pitfalls": [
+        "symbol 使用中文品种名称而不是合约代码"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "spot_quotations_sge",
+      "asset_class": "spot",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "上海黄金交易所品种代码，如 Au99.99。",
+      "date_format": "无",
+      "key_fields": [
+        "时间",
+        "开盘",
+        "最新",
+        "最高",
+        "最低"
+      ],
+      "freshness": "上海黄金交易所实时行情。",
+      "cost": "low",
+      "pitfalls": [
+        "仅适用于 SGE 品种"
+      ],
+      "fallback": [
+        "spot_hist_sge"
+      ]
+    },
+    {
+      "function": "spot_hist_sge",
+      "asset_class": "spot",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "上海黄金交易所品种代码，如 Au99.99。",
+      "date_format": "历史序列。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低"
+      ],
+      "freshness": "上海黄金交易所历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "仅适用于 SGE 品种"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "spot_symbol_table_sge",
+      "asset_class": "spot",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "无",
+      "key_fields": [
+        "品种代码",
+        "品种名称"
+      ],
+      "freshness": "上海黄金交易所品种表。",
+      "cost": "low",
+      "pitfalls": [
+        "更适合作为辅助查询接口"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "spot_price_qh",
+      "asset_class": "spot",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "中文品种名称，如 螺纹钢。",
+      "date_format": "历史序列。",
+      "key_fields": [
+        "日期",
+        "价格"
+      ],
+      "freshness": "99期货现货走势。",
+      "cost": "low",
+      "pitfalls": [
+        "品种名称需先查对照表"
+      ],
+      "fallback": [
+        "spot_price_table_qh"
+      ]
+    },
+    {
+      "function": "spot_price_table_qh",
+      "asset_class": "spot",
+      "scenarios": [
+        "market_snapshot"
+      ],
+      "symbol_format": "无",
+      "date_format": "无",
+      "key_fields": [
+        "交易所",
+        "品种名称"
+      ],
+      "freshness": "99期货现货品种表。",
+      "cost": "low",
+      "pitfalls": [
+        "用于辅助确认可用品种名称"
+      ],
+      "fallback": []
     }
   ]
 }

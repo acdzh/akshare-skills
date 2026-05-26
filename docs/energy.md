@@ -1,6 +1,6 @@
 # 能源数据
 
-本文件仅说明油价、碳排放和天然气相关数据如何获取。
+本文件仅说明油价、碳排放和能源日度指标相关数据如何获取。
 
 ## 任务路由
 
@@ -9,7 +9,8 @@
 | 油价调价 | 获取汽柴油历史调价数据 | `energy_oil_hist` |
 | 地区油价 | 获取各地油价数据 | `energy_oil_detail` |
 | 碳排放 | 获取国内碳市场交易数据 | `energy_carbon_domestic` |
-| 天然气 | 获取液化天然气日度数据 | `energy_lng_daily` |
+| 能源日度指标 | 获取沿海六大电厂库存等能源数据 | `macro_china_daily_energy` |
+| 能源指数 | 获取能源指数数据 | `macro_china_energy_index` |
 
 ## 高频接口
 
@@ -29,9 +30,13 @@
 |------|------|------|
 | symbol | str | 碳市场名称，如 `全国`、`湖北`、`广东` |
 
-### energy_lng_daily
+### macro_china_daily_energy
 
-用途：获取液化天然气日度数据。
+用途：获取中国日度能源相关数据。
+
+### macro_china_energy_index
+
+用途：获取能源指数数据。
 
 ## 常见坑
 
