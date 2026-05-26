@@ -1,15 +1,15 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-05-26",
-  "description": "高频 AKShare 接口目录。用于任务到接口的快速映射、参数校验和降级决策。",
+  "description": "高频 AKShare 接口目录。用于数据任务映射、参数校验和回退处理。",
   "interfaces": [
     {
       "function": "stock_zh_a_spot_em",
       "asset_class": "stock",
       "scenarios": [
-        "quick_quote",
-        "single_stock_decision",
-        "stock_screening"
+        "market_snapshot",
+        "stock_data",
+        "market_data"
       ],
       "symbol_format": "无单只 symbol，返回 A 股全市场快照。",
       "date_format": "无",
@@ -39,9 +39,9 @@
       "function": "stock_zh_a_hist",
       "asset_class": "stock",
       "scenarios": [
-        "quick_quote",
-        "single_stock_decision",
-        "stock_screening",
+        "market_snapshot",
+        "stock_data",
+        "market_data",
         "technical_analysis"
       ],
       "symbol_format": "A 股常用纯数字代码，例如 600519。",
@@ -70,9 +70,9 @@
       "function": "stock_financial_analysis_indicator_em",
       "asset_class": "stock",
       "scenarios": [
-        "single_stock_decision",
+        "stock_data",
         "fundamental_analysis",
-        "stock_screening"
+        "market_data"
       ],
       "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
       "date_format": "按报告期，无显式日期参数。",
@@ -103,7 +103,7 @@
       "asset_class": "stock",
       "scenarios": [
         "fundamental_analysis",
-        "single_stock_decision"
+        "stock_data"
       ],
       "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
       "date_format": "按报告期，无显式日期参数。",
@@ -126,7 +126,7 @@
       "asset_class": "stock",
       "scenarios": [
         "fundamental_analysis",
-        "single_stock_decision"
+        "stock_data"
       ],
       "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
       "date_format": "按报告期，无显式日期参数。",
@@ -149,7 +149,7 @@
       "asset_class": "stock",
       "scenarios": [
         "fundamental_analysis",
-        "single_stock_decision"
+        "stock_data"
       ],
       "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
       "date_format": "按报告期，无显式日期参数。",
@@ -170,7 +170,7 @@
       "function": "stock_comment_em",
       "asset_class": "stock",
       "scenarios": [
-        "single_stock_decision",
+        "stock_data",
         "sentiment_analysis"
       ],
       "symbol_format": "无单只 symbol，返回全量评论快照。",
@@ -197,7 +197,7 @@
       "function": "stock_news_em",
       "asset_class": "stock",
       "scenarios": [
-        "single_stock_decision",
+        "stock_data",
         "sentiment_analysis"
       ],
       "symbol_format": "通常使用个股代码。",
@@ -219,10 +219,91 @@
       ]
     },
     {
+      "function": "stock_news_main_cx",
+      "asset_class": "news",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "无",
+      "date_format": "无",
+      "key_fields": [
+        "tag",
+        "summary",
+        "url"
+      ],
+      "freshness": "财经资讯流。",
+      "cost": "low",
+      "pitfalls": [
+        "资讯摘要不等于结构化字段"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_report_disclosure",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "按文档要求传参。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "代码",
+        "名称",
+        "公告日期",
+        "报告标题"
+      ],
+      "freshness": "研报披露流。",
+      "cost": "medium",
+      "pitfalls": [
+        "字段名称可能随数据源调整"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_rank_detail_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "需要市场前缀，如 SZ000665。",
+      "date_format": "无",
+      "key_fields": [
+        "时间",
+        "排名",
+        "热度"
+      ],
+      "freshness": "热度历史序列。",
+      "cost": "low",
+      "pitfalls": [
+        "市场前缀格式容易写错"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_keyword_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "sentiment_data"
+      ],
+      "symbol_format": "需要市场前缀，如 SZ000665。",
+      "date_format": "无",
+      "key_fields": [
+        "关键词",
+        "热度",
+        "时间"
+      ],
+      "freshness": "热搜关键词快照。",
+      "cost": "low",
+      "pitfalls": [
+        "关键词是文本标签，不是标准化分类"
+      ],
+      "fallback": []
+    },
+    {
       "function": "stock_notice_report",
       "asset_class": "stock",
       "scenarios": [
-        "single_stock_decision",
+        "stock_data",
         "sentiment_analysis"
       ],
       "symbol_format": "按文档要求传参。",
@@ -243,12 +324,103 @@
       "fallback": []
     },
     {
+      "function": "stock_zh_a_hist_min_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "price_history",
+        "technical_analysis"
+      ],
+      "symbol_format": "A 股纯数字代码，如 000001。",
+      "date_format": "YYYY-MM-DD HH:MM:SS。",
+      "key_fields": [
+        "时间",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量"
+      ],
+      "freshness": "分钟级历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "时间参数格式要求严格"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_individual_info_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "stock_data",
+        "fundamental_data"
+      ],
+      "symbol_format": "A 股纯数字代码，如 600519。",
+      "date_format": "无",
+      "key_fields": [
+        "股票代码",
+        "股票简称",
+        "行业",
+        "总市值",
+        "流通市值",
+        "市盈率",
+        "市净率"
+      ],
+      "freshness": "个股基础信息快照。",
+      "cost": "low",
+      "pitfalls": [
+        "字段名随数据源可能存在差异"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_financial_abstract",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_data"
+      ],
+      "symbol_format": "A 股纯数字代码，如 600519。",
+      "date_format": "按报告期返回。",
+      "key_fields": [
+        "每股收益",
+        "每股净资产",
+        "净资产收益率",
+        "资产负债率"
+      ],
+      "freshness": "财务摘要数据。",
+      "cost": "medium",
+      "pitfalls": [
+        "不同期次字段排序可能变化"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_profit_forecast_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_data"
+      ],
+      "symbol_format": "可为空或使用行业名称筛选。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "研报数",
+        "买入评级数",
+        "预测EPS"
+      ],
+      "freshness": "盈利预测快照。",
+      "cost": "low",
+      "pitfalls": [
+        "预测值依赖研报口径，不是财务事实"
+      ],
+      "fallback": []
+    },
+    {
       "function": "stock_individual_fund_flow_rank",
       "asset_class": "stock",
       "scenarios": [
-        "single_stock_decision",
-        "stock_screening",
-        "market_regime"
+        "stock_data",
+        "market_data"
       ],
       "symbol_format": "无单只 symbol，通过 indicator 选择时间窗。",
       "date_format": "无",
@@ -270,8 +442,7 @@
       "function": "stock_sector_fund_flow_rank",
       "asset_class": "market",
       "scenarios": [
-        "market_regime",
-        "stock_screening"
+        "market_data"
       ],
       "symbol_format": "通过 indicator 和 sector_type 选择口径。",
       "date_format": "无",
@@ -295,8 +466,7 @@
       "function": "stock_board_concept_spot_em",
       "asset_class": "market",
       "scenarios": [
-        "market_regime",
-        "stock_screening"
+        "market_data"
       ],
       "symbol_format": "无单只 symbol，返回概念板块快照。",
       "date_format": "无",
@@ -318,8 +488,8 @@
       "function": "stock_zh_index_spot_em",
       "asset_class": "index",
       "scenarios": [
-        "quick_quote",
-        "market_regime"
+        "market_snapshot",
+        "market_data"
       ],
       "symbol_format": "无单只 symbol，返回指数快照。",
       "date_format": "无",
@@ -343,7 +513,7 @@
       "function": "index_zh_a_hist",
       "asset_class": "index",
       "scenarios": [
-        "market_regime",
+        "market_data",
         "technical_analysis"
       ],
       "symbol_format": "指数代码，例如 000300。",
@@ -366,10 +536,33 @@
       ]
     },
     {
+      "function": "stock_zh_index_daily",
+      "asset_class": "index",
+      "scenarios": [
+        "price_history"
+      ],
+      "symbol_format": "指数代码，如 sz399552。",
+      "date_format": "接口返回历史序列。",
+      "key_fields": [
+        "date",
+        "open",
+        "close",
+        "high",
+        "low",
+        "volume"
+      ],
+      "freshness": "指数历史日线。",
+      "cost": "medium",
+      "pitfalls": [
+        "代码格式与其他指数接口可能不同"
+      ],
+      "fallback": []
+    },
+    {
       "function": "fund_name_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "无参数或按接口文档过滤。",
       "date_format": "无",
@@ -389,7 +582,7 @@
       "function": "fund_open_fund_info_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "基金代码。",
       "date_format": "接口定义的 indicator 口径。",
@@ -412,8 +605,8 @@
       "function": "fund_etf_spot_em",
       "asset_class": "fund",
       "scenarios": [
-        "quick_quote",
-        "fund_selection"
+        "market_snapshot",
+        "fund_data"
       ],
       "symbol_format": "无单只 symbol，返回 ETF 快照。",
       "date_format": "无",
@@ -437,7 +630,7 @@
       "function": "fund_portfolio_hold_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "基金代码。",
       "date_format": "按报告期披露。",
@@ -459,8 +652,8 @@
       "function": "macro_china_gdp",
       "asset_class": "macro",
       "scenarios": [
-        "market_regime",
-        "macro_environment"
+        "market_data",
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -481,8 +674,8 @@
       "function": "macro_china_cpi",
       "asset_class": "macro",
       "scenarios": [
-        "market_regime",
-        "macro_environment"
+        "market_data",
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -503,8 +696,8 @@
       "function": "macro_china_pmi",
       "asset_class": "macro",
       "scenarios": [
-        "market_regime",
-        "macro_environment"
+        "market_data",
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -525,8 +718,8 @@
       "function": "macro_china_lpr",
       "asset_class": "macro",
       "scenarios": [
-        "market_regime",
-        "macro_environment"
+        "market_data",
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -548,8 +741,8 @@
       "function": "macro_china_shibor_all",
       "asset_class": "macro",
       "scenarios": [
-        "market_regime",
-        "macro_environment"
+        "market_data",
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -570,8 +763,8 @@
       "function": "fund_lof_spot_em",
       "asset_class": "fund",
       "scenarios": [
-        "quick_quote",
-        "fund_selection"
+        "market_snapshot",
+        "fund_data"
       ],
       "symbol_format": "无单只 symbol，返回 LOF 快照。",
       "date_format": "无",
@@ -593,8 +786,8 @@
       "function": "fund_etf_hist_em",
       "asset_class": "fund",
       "scenarios": [
-        "quick_quote",
-        "fund_selection"
+        "market_snapshot",
+        "fund_data"
       ],
       "symbol_format": "ETF 代码。",
       "date_format": "常用 YYYYMMDD。",
@@ -616,7 +809,7 @@
       "function": "fund_open_fund_daily_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "开放式基金代码或接口指定口径。",
       "date_format": "以接口参数为准。",
@@ -638,7 +831,7 @@
       "function": "fund_manager_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "接口参数按文档定义。",
       "date_format": "无",
@@ -659,7 +852,7 @@
       "function": "fund_open_fund_rank_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "通过参数指定区间和类型。",
       "date_format": "以接口定义的统计窗口为准。",
@@ -681,7 +874,7 @@
       "function": "fund_exchange_rank_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "通过接口参数指定排行口径。",
       "date_format": "以接口定义为准。",
@@ -703,7 +896,7 @@
       "function": "fund_aum_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "按文档口径查询。",
       "date_format": "以接口返回为准。",
@@ -723,7 +916,7 @@
       "function": "fund_value_estimation_em",
       "asset_class": "fund",
       "scenarios": [
-        "fund_selection"
+        "fund_data"
       ],
       "symbol_format": "按文档参数查询。",
       "date_format": "无",
@@ -744,7 +937,7 @@
       "function": "stock_hot_rank_em",
       "asset_class": "market",
       "scenarios": [
-        "market_regime",
+        "market_data",
         "sentiment_analysis"
       ],
       "symbol_format": "无单只 symbol，返回热度排行。",
@@ -768,7 +961,7 @@
       "function": "stock_lhb_detail_em",
       "asset_class": "stock",
       "scenarios": [
-        "stock_screening",
+        "market_data",
         "sentiment_analysis"
       ],
       "symbol_format": "通过 start_date/end_date 查询。",
@@ -793,7 +986,7 @@
       "function": "stock_lhb_stock_statistic_em",
       "asset_class": "stock",
       "scenarios": [
-        "stock_screening",
+        "market_data",
         "sentiment_analysis"
       ],
       "symbol_format": "通过 symbol 指定近一月、近三月等时间窗。",
@@ -815,7 +1008,7 @@
       "function": "macro_china_ppi",
       "asset_class": "macro",
       "scenarios": [
-        "macro_environment"
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -836,7 +1029,7 @@
       "function": "macro_china_money_supply",
       "asset_class": "macro",
       "scenarios": [
-        "macro_environment"
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -857,7 +1050,7 @@
       "function": "macro_china_exports_yoy",
       "asset_class": "macro",
       "scenarios": [
-        "macro_environment"
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -878,7 +1071,7 @@
       "function": "macro_china_imports_yoy",
       "asset_class": "macro",
       "scenarios": [
-        "macro_environment"
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
@@ -899,7 +1092,7 @@
       "function": "macro_china_fx_reserves_yearly",
       "asset_class": "macro",
       "scenarios": [
-        "macro_environment"
+        "macro_data"
       ],
       "symbol_format": "无",
       "date_format": "由接口返回历史序列。",
