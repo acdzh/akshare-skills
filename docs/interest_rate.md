@@ -1,101 +1,54 @@
 # 利率数据
 
-## LPR 利率
+本文件仅说明 LPR、SHIBOR、准备金率、同业拆借、国债收益率和 Swap 利率数据如何获取。
+
+## 任务路由
+
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| LPR | 获取贷款市场报价利率 | `macro_china_lpr` |
+| SHIBOR | 获取银行间拆借利率 | `macro_china_shibor_all` |
+| 准备金率 | 获取存款准备金率数据 | `macro_china_reserve_requirement_ratio` |
+| 同业拆借 | 获取同业拆借利率 | `rate_interbank` |
+| 国债收益率 | 获取中美国债收益率 | `bond_zh_us_rate` |
+| Swap 利率 | 获取利率互换数据 | `macro_china_swap_rate` |
+
+## 高频接口
 
 ### macro_china_lpr
 
-描述：中国贷款市场报价利率 (LPR)
+用途：获取 LPR 历史数据。
 
-输入参数：无
-
-输出参数：TRADE_DATE, LPR1Y, LPR5Y
-
-```python
-import akshare as ak
-df = ak.macro_china_lpr()
-```
-
----
-
-## SHIBOR
+关键字段通常包括：`TRADE_DATE`、`LPR1Y`、`LPR5Y`
 
 ### macro_china_shibor_all
 
-描述：上海银行间同业拆放利率 (SHIBOR)
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.macro_china_shibor_all()
-```
-
----
-
-## 存贷款利率
+用途：获取 SHIBOR 历史数据。
 
 ### macro_china_reserve_requirement_ratio
 
-描述：中国存款准备金率数据
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.macro_china_reserve_requirement_ratio()
-```
-
----
-
-## 同业拆借
+用途：获取存款准备金率数据。
 
 ### rate_interbank
 
-描述：同业拆借利率
-
-输入参数：
+用途：获取同业拆借利率。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| market | str | "上海银行同业拆借市场"/"中国银行同业拆借市场" 等 |
-| symbol | str | "Shibor人民币"/"银银间回购定盘利率" 等 |
-| indicator | str | "隔夜"/"1周"/"2周"/"1月"/"3月"/"6月"/"9月"/"1年" |
-
-```python
-import akshare as ak
-df = ak.rate_interbank(market="上海银行同业拆借市场", symbol="Shibor人民币", indicator="1周")
-```
-
----
-
-## 国债收益率
+| market | str | 市场名称 |
+| symbol | str | 利率种类 |
+| indicator | str | `隔夜` / `1周` / `2周` / `1月` / `3月` / `6月` / `9月` / `1年` |
 
 ### bond_zh_us_rate
 
-描述：中美国债收益率
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| start_date | str | "20240101" |
-
-```python
-import akshare as ak
-df = ak.bond_zh_us_rate(start_date="20240101")
-```
-
----
-
-## Swap 利率
+用途：获取中美国债收益率历史。
 
 ### macro_china_swap_rate
 
-描述：中国利率互换数据
+用途：获取中国利率互换数据。
 
-输入参数：无
+## 常见坑
 
-```python
-import akshare as ak
-df = ak.macro_china_swap_rate()
-```
+1. 利率数据频率可能是日度、周度或事件驱动。
+2. 同业拆借接口依赖多个参数共同确定口径。
+3. 国债收益率和政策利率不是同一概念。

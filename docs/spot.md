@@ -1,77 +1,63 @@
 # 现货数据
 
-## 现货实时行情
+本文件仅说明上海黄金交易所现货、现货历史、现货品种表和期现对照数据如何获取。
 
-### spot_em
+## 任务路由
 
-描述：东方财富-现货实时行情
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| SGE 实时行情 | 获取上海黄金交易所实时行情 | `spot_quotations_sge` |
+| SGE 历史行情 | 获取上海黄金交易所历史行情 | `spot_hist_sge` |
+| SGE 品种表 | 获取上海黄金交易所品种清单 | `spot_symbol_table_sge` |
+| 现货走势 | 获取 99 期货现货走势 | `spot_price_qh` |
+| 品种对照表 | 获取 99 期货现货品种表 | `spot_price_table_qh` |
+| 黄金/白银基准价 | 获取基准价数据 | `spot_golden_benchmark_sge` / `spot_silver_benchmark_sge` |
+| 期现对照 | 获取期货与现货对照价格 | `futures_spot_sys` |
 
-输入参数：无
+## 高频接口
 
-```python
-import akshare as ak
-df = ak.spot_em()
-```
+### spot_quotations_sge
 
----
-
-## 现货历史行情
-
-### spot_hist_em
-
-描述：东方财富-现货历史行情
-
-输入参数：
+用途：获取上海黄金交易所实时行情。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 现货品种代码 |
-| period | str | "daily"/"weekly"/"monthly" |
-| start_date | str | "20240101" |
-| end_date | str | "20241231" |
+| symbol | str | 品种代码，如 `Au99.99` |
 
-```python
-import akshare as ak
-df = ak.spot_hist_em(symbol="Au99.99", period="daily", start_date="20240101", end_date="20241231")
-```
+### spot_hist_sge
 
----
+用途：获取上海黄金交易所历史行情。
 
-## 黄金/白银现货
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| symbol | str | 品种代码，如 `Au99.99` |
 
-### spot_golden_benchmark_sge
+### spot_symbol_table_sge
 
-描述：上海黄金交易所-黄金基准价
+用途：获取上海黄金交易所品种表。
 
-输入参数：无
+### spot_price_qh
 
-```python
-import akshare as ak
-df = ak.spot_golden_benchmark_sge()
-```
+用途：获取 99 期货现货走势。
 
-### spot_silver_benchmark_sge
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| symbol | str | 品种名称，如 `螺纹钢` |
 
-描述：上海黄金交易所-白银基准价
+### spot_price_table_qh
 
-输入参数：无
+用途：获取 99 期货现货品种对照表。
 
-```python
-import akshare as ak
-df = ak.spot_silver_benchmark_sge()
-```
+### spot_golden_benchmark_sge / spot_silver_benchmark_sge
 
----
-
-## 大宗商品现货价格
+用途：获取黄金和白银基准价。
 
 ### futures_spot_sys
 
-描述：期货与现货对照价格
+用途：获取期货与现货对照价格。
 
-输入参数：无
+## 常见坑
 
-```python
-import akshare as ak
-df = ak.futures_spot_sys()
-```
+1. 上海黄金交易所行情和 99 期货现货走势不是同一来源。
+2. 基准价和市场成交价不是同一口径。
+3. 现货品种代码和期货代码不是同一套命名。

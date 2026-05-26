@@ -1,141 +1,68 @@
 # 期权数据
 
-## 期权交易所
+本文件仅说明 ETF 期权、商品期权、股指期权的行情、合约列表、历史和 Greeks 数据如何获取。
 
-| 交易所 | 代码 | 品种类型 |
-|--------|------|----------|
-| 上海证券交易所 | SSE | ETF期权（50ETF、300ETF等） |
-| 深圳证券交易所 | SZSE | ETF期权（300ETF、创业板ETF等） |
-| 中国金融期货交易所 | CFFEX | 股指期权（沪深300、中证1000等） |
-| 上海期货交易所 | SHFE | 商品期权（铜、铝、黄金、白银、螺纹钢等） |
-| 大连商品交易所 | DCE | 商品期权（铁矿石、豆粕、玉米等） |
-| 郑州商品交易所 | CZCE | 商品期权（白糖、棉花、甲醇、PTA等） |
-| 广州期货交易所 | GFEX | 商品期权（工业硅、碳酸锂等） |
+## 任务路由
 
----
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| ETF 期权快照 | 获取 ETF 期权实时行情 | `option_current_em` |
+| 合约列表 | 获取上交所期权合约列表 | `option_sse_list_sina` |
+| ETF 期权历史 | 获取上交所期权历史日线 | `option_sse_daily_sina` |
+| 风险指标 | 获取 Greeks 数据 | `option_risk_indicator_sse` |
+| 商品期权 | 获取交易所商品期权日度数据 | `option_hist_dce` / `option_hist_czce` |
+| 股指期权 | 获取沪深300股指期权实时数据 | `option_cffex_hs300_spot_sina` |
 
-## ETF 期权实时行情
+## 高频接口
 
 ### option_current_em
 
-描述：东方财富-ETF 期权实时行情
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.option_current_em()
-```
-
----
-
-## 期权合约信息
+用途：获取 ETF 期权实时行情。
 
 ### option_sse_list_sina
 
-描述：新浪-上交所期权合约列表
-
-输入参数：
+用途：获取上交所期权合约列表。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | "50ETF"/"300ETF" |
-| exchange | str | "null" |
+| symbol | str | `50ETF` / `300ETF` |
+| exchange | str | 通常为 `null` |
 
-```python
-import akshare as ak
-df = ak.option_sse_list_sina(symbol="50ETF", exchange="null")
-```
+### option_sse_daily_sina
 
----
-
-## 期权历史行情
-
-### option_hist_em
-
-描述：东方财富-期权历史行情
-
-输入参数：
+用途：获取指定上交所期权历史日线。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 期权合约代码 |
-
-```python
-import akshare as ak
-df = ak.option_hist_em(symbol="10007830")
-```
-
----
-
-## 期权 Greeks
+| symbol | str | 期权代码，如 `10003889` |
 
 ### option_risk_indicator_sse
 
-描述：上交所-期权风险指标（Greeks）
-
-输入参数：
+用途：获取上交所期权风险指标。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| date | str | 日期，如 "20241220" |
+| date | str | `YYYYMMDD` |
 
-```python
-import akshare as ak
-df = ak.option_risk_indicator_sse(date="20241220")
-```
+### option_hist_dce / option_hist_czce
 
----
-
-## 商品期权行情
-
-### option_dce_daily
-
-描述：大商所-商品期权每日行情
-
-输入参数：
+用途：获取商品期权日度数据。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 品种代码，如 "m"(豆粕) |
-| trade_date | str | "20241220" |
-
-```python
-import akshare as ak
-df = ak.option_dce_daily(symbol="m", trade_date="20241220")
-```
-
-### option_czce_daily
-
-描述：郑商所-商品期权每日行情
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 品种代码，如 "SR"(白糖) |
-| trade_date | str | "20241220" |
-
-```python
-import akshare as ak
-df = ak.option_czce_daily(symbol="SR", trade_date="20241220")
-```
-
----
-
-## 股指期权
+| symbol | str | 期权品种名称 |
+| trade_date | str | `YYYYMMDD` |
 
 ### option_cffex_hs300_spot_sina
 
-描述：新浪-沪深300股指期权实时行情
-
-输入参数：
+用途：获取沪深300股指期权实时数据。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 合约月份，如 "2412" |
+| symbol | str | 合约月份，如 `2412` |
 
-```python
-import akshare as ak
-df = ak.option_cffex_hs300_spot_sina(symbol="2412")
-```
+## 常见坑
+
+1. 不同期权市场的合约代码格式差异很大。
+2. 商品期权和 ETF 期权的字段口径不完全一致。
+3. Greeks 数据通常是按日期批量提供，不是逐笔实时字段。

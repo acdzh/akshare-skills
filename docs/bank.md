@@ -1,47 +1,48 @@
 # 银行数据
 
-## 银行股实时行情
+本文件仅说明银行公开信息、同业拆借利率以及银行个股相关数据的获取方式。
 
-可通过 stock_zh_a_spot_em() 筛选银行板块获取
+## 任务路由
 
----
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| 银行公开信息 | 获取银保监分局行政处罚公开表 | `bank_fjcf_table_detail` |
+| 同业拆借利率 | 获取银行间利率数据 | `rate_interbank` |
+| 银行股行情 | 获取银行个股行情 | `stock_zh_a_spot_em` |
+| 银行股财务 | 获取银行个股财务数据 | `stock_financial_analysis_indicator_em` |
 
-## 银行理财产品
+## 高频接口
 
-### bank_financial_product_em
+### bank_fjcf_table_detail
 
-描述：银行理财产品列表
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.bank_financial_product_em()
-```
-
----
-
-## 同业拆借利率
-
-### rate_interbank
-
-描述：同业拆借利率数据
-
-输入参数：
+用途：获取银保监分局行政处罚公开表。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| market | str | "上海银行同业拆借市场"等 |
-| symbol | str | "Shibor人民币"等 |
-| indicator | str | "隔夜"/"1周"/"2周"/"1月"/"3月"/"6月"/"9月"/"1年" |
+| page | int | 页数 |
+| item | str | `机关` / `本级` / `分局本级` |
+| begin | int | 起始页 |
 
-```python
-import akshare as ak
-df = ak.rate_interbank(market="上海银行同业拆借市场", symbol="Shibor人民币", indicator="隔夜")
-```
+### rate_interbank
 
----
+用途：获取同业拆借利率。
 
-## 银行财报
+| 名称 | 类型 | 描述 |
+|------|------|------|
+| market | str | 市场名称 |
+| symbol | str | 利率种类 |
+| indicator | str | `隔夜` / `1周` / `2周` / `1月` / `3月` / `6月` / `9月` / `1年` |
 
-通过 stock_financial_analysis_indicator 系列接口获取银行个股财务数据。
+### stock_zh_a_spot_em
+
+用途：获取银行股实时行情，需再按行业或名称筛字段。
+
+### stock_financial_analysis_indicator_em
+
+用途：获取银行个股财务指标。
+
+## 常见坑
+
+1. 银行公开信息和银行股行情是两类不同数据。
+2. 同业拆借参数需要组合指定市场和利率种类。
+3. 银行个股财务接口通常需要带市场前缀的股票代码。

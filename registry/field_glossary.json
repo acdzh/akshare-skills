@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-05-26",
+  "description": "高频字段释义，帮助快速理解 AKShare 返回列名。",
+  "fields": [
+    {
+      "field": "最新价",
+      "category": "market",
+      "meaning": "当前最新成交价或快照价格。",
+      "common_units": ["元", "点"],
+      "notes": ["实时接口字段，盘中会变化"]
+    },
+    {
+      "field": "涨跌幅",
+      "category": "market",
+      "meaning": "相对前一参考价格的百分比变动。",
+      "common_units": ["%"],
+      "notes": ["通常是相对昨收的日内涨跌幅"]
+    },
+    {
+      "field": "成交额",
+      "category": "market",
+      "meaning": "成交金额。",
+      "common_units": ["元"],
+      "notes": ["不同市场单位和时间粒度可能不同"]
+    },
+    {
+      "field": "换手率",
+      "category": "market",
+      "meaning": "一定时间内成交量与流通股本的比率。",
+      "common_units": ["%"],
+      "notes": ["常见于股票快照数据"]
+    },
+    {
+      "field": "市盈率-动态",
+      "category": "valuation",
+      "meaning": "动态市盈率，通常基于滚动盈利或预测口径。",
+      "common_units": ["倍"],
+      "notes": ["不同数据源的动态口径可能不完全一致"]
+    },
+    {
+      "field": "市净率",
+      "category": "valuation",
+      "meaning": "市值相对净资产的比率。",
+      "common_units": ["倍"],
+      "notes": []
+    },
+    {
+      "field": "总市值",
+      "category": "valuation",
+      "meaning": "总股本乘以当前价格得到的总市值。",
+      "common_units": ["元"],
+      "notes": ["通常随实时价格变化"]
+    },
+    {
+      "field": "TOTALOPERATEREVETZ",
+      "category": "fundamental",
+      "meaning": "营业总收入同比增长。",
+      "common_units": ["%"],
+      "notes": ["常见于东财财务指标接口"]
+    },
+    {
+      "field": "PARENTNETPROFITTZ",
+      "category": "fundamental",
+      "meaning": "归母净利润同比增长。",
+      "common_units": ["%"],
+      "notes": []
+    },
+    {
+      "field": "ROEJQ",
+      "category": "fundamental",
+      "meaning": "加权净资产收益率。",
+      "common_units": ["%"],
+      "notes": ["财务指标通常对应报告期"]
+    },
+    {
+      "field": "XSMLL",
+      "category": "fundamental",
+      "meaning": "销售毛利率。",
+      "common_units": ["%"],
+      "notes": []
+    },
+    {
+      "field": "XSJLL",
+      "category": "fundamental",
+      "meaning": "销售净利率。",
+      "common_units": ["%"],
+      "notes": []
+    },
+    {
+      "field": "ZCFZL",
+      "category": "fundamental",
+      "meaning": "资产负债率。",
+      "common_units": ["%"],
+      "notes": []
+    },
+    {
+      "field": "LPR1Y",
+      "category": "rate",
+      "meaning": "1 年期贷款市场报价利率。",
+      "common_units": ["%"],
+      "notes": ["常见于 `macro_china_lpr` 返回结果"]
+    },
+    {
+      "field": "LPR5Y",
+      "category": "rate",
+      "meaning": "5 年期以上贷款市场报价利率。",
+      "common_units": ["%"],
+      "notes": []
+    }
+  ]
+}

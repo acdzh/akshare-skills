@@ -1,334 +1,91 @@
 # 基金数据
 
-## 基金基本信息
+本文件仅说明基金相关数据如何获取，以及净值、行情、持仓、经理等字段的基本口径。
+
+## 任务路由
+
+| 数据需求 | 目标 | 优先接口 |
+|------|------|----------|
+| 基金检索 | 找代码、名称、类型 | `fund_name_em` |
+| 开放式基金净值 | 获取单位净值、累计净值、收益率走势 | `fund_open_fund_info_em` |
+| 开放式基金日表 | 获取同类型基金日度数据 | `fund_open_fund_daily_em` |
+| ETF 行情 | 获取 ETF 盘中快照 | `fund_etf_spot_em` |
+| ETF 历史 | 获取 ETF 历史价格序列 | `fund_etf_hist_em` |
+| 持仓与经理 | 获取持仓、经理和规模信息 | `fund_portfolio_hold_em` / `fund_manager_em` / `fund_aum_em` |
+
+## 高频接口
 
 ### fund_name_em
 
-描述：东方财富-天天基金-所有基金基本信息（代码、名称、类型）
+用途：基金基础信息检索。
 
-输入参数：无
-
-输出参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| 基金代码 | object | - |
-| 拼音缩写 | object | - |
-| 基金简称 | object | - |
-| 基金类型 | object | 混合型/股票型/债券型等 |
-
-```python
-import akshare as ak
-df = ak.fund_name_em()
-```
-
----
-
-## 开放基金净值与走势
+关键字段：`基金代码`、`基金简称`、`基金类型`
 
 ### fund_open_fund_info_em
 
-描述：东方财富-开放基金数据（净值走势、收益走势等）
+用途：开放式基金净值走势和同类排名走势。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 基金代码，如 "110011" |
-| indicator | str | "单位净值走势" / "累计净值走势" / "累计收益率走势" / "同类排名走势" / "同类排名百分比" / "分红送配详情" / "拆分详情" |
-
-```python
-import akshare as ak
-# 获取累计净值走势
-df = ak.fund_open_fund_info_em(symbol="110011", indicator="累计净值走势")
-```
+| symbol | str | 基金代码，如 `110011` |
+| indicator | str | `单位净值走势` / `累计净值走势` / `累计收益率走势` / `同类排名走势` / `同类排名百分比` |
 
 ### fund_open_fund_daily_em
 
-描述：东方财富-开放基金每日净值
-
-输入参数：
+用途：开放式基金日度数据。
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| fund_type | str | "全部"/"股票型"/"混合型"/"债券型"/"指数型"/"QDII"/"FOF" |
-
-```python
-import akshare as ak
-df = ak.fund_open_fund_daily_em(fund_type="全部")
-```
-
----
-
-## ETF 数据
+| fund_type | str | `全部` / `股票型` / `混合型` / `债券型` / `指数型` / `QDII` / `FOF` |
 
 ### fund_etf_spot_em
 
-描述：东方财富-ETF 实时行情
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_etf_spot_em()
-```
+用途：ETF 实时行情。
 
 ### fund_etf_hist_em
 
-描述：东方财富-ETF 历史行情
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | ETF代码，如 "510300" |
-| period | str | "daily"/"weekly"/"monthly" |
-| start_date | str | "20240101" |
-| end_date | str | "20241231" |
-| adjust | str | ""/"qfq"/"hfq" |
-
-```python
-import akshare as ak
-df = ak.fund_etf_hist_em(symbol="510300", period="daily", start_date="20240101", end_date="20241231", adjust="qfq")
-```
-
-### fund_etf_fund_daily_em
-
-描述：东方财富-ETF 基金每日净值
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_etf_fund_daily_em()
-```
-
-### fund_etf_fund_info_em
-
-描述：东方财富-单只 ETF 基金净值走势
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| fund | str | ETF基金代码 |
-| start_date | str | "20240101" |
-| end_date | str | "20241231" |
-
-```python
-import akshare as ak
-df = ak.fund_etf_fund_info_em(fund="510300", start_date="20240101", end_date="20241231")
-```
-
----
-
-## LOF 基金
+用途：ETF 历史行情。
 
 ### fund_lof_spot_em
 
-描述：东方财富-LOF 实时行情
+用途：LOF 实时行情。
 
-输入参数：无
+### fund_open_fund_rank_em / fund_exchange_rank_em
 
-```python
-import akshare as ak
-df = ak.fund_lof_spot_em()
-```
-
-### fund_lof_hist_em
-
-描述：东方财富-LOF 历史行情
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | LOF代码 |
-| period | str | "daily"/"weekly"/"monthly" |
-| start_date | str | "20240101" |
-| end_date | str | "20241231" |
-| adjust | str | ""/"qfq"/"hfq" |
-
-```python
-import akshare as ak
-df = ak.fund_lof_hist_em(symbol="160119", period="daily", start_date="20240101", end_date="20241231", adjust="qfq")
-```
-
----
-
-## 基金排行
-
-### fund_open_fund_rank_em
-
-描述：东方财富-开放基金排行
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | "全部"/"股票型"/"混合型"/"债券型"/"指数型"/"QDII"/"FOF" |
-
-```python
-import akshare as ak
-df = ak.fund_open_fund_rank_em(symbol="全部")
-```
-
-### fund_exchange_rank_em
-
-描述：东方财富-场内基金排行
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_exchange_rank_em()
-```
-
----
-
-## 基金持仓
+用途：基金排行原始数据。
 
 ### fund_portfolio_hold_em
 
-描述：东方财富-基金持仓（股票持仓）
+用途：股票持仓数据。
 
 输入参数：
 
 | 名称 | 类型 | 描述 |
 |------|------|------|
-| symbol | str | 基金代码，如 "110011" |
-| date | str | 报告期，如 "2024"（年份） |
-
-```python
-import akshare as ak
-df = ak.fund_portfolio_hold_em(symbol="110011", date="2024")
-```
+| symbol | str | 基金代码 |
+| date | str | 报告期年份，如 `2024` |
 
 ### fund_portfolio_bond_hold_em
 
-描述：东方财富-基金持仓（债券持仓）
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 基金代码 |
-| date | str | 报告期年份 |
-
-```python
-import akshare as ak
-df = ak.fund_portfolio_bond_hold_em(symbol="110011", date="2024")
-```
-
----
-
-## 货币基金
-
-### fund_money_fund_daily_em
-
-描述：东方财富-货币型基金每日数据
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_money_fund_daily_em()
-```
-
----
-
-## 基金经理
+用途：债券持仓数据。
 
 ### fund_manager_em
 
-描述：东方财富-基金经理信息
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 基金代码 |
-
-```python
-import akshare as ak
-df = ak.fund_manager_em(symbol="110011")
-```
-
----
-
-## 基金规模
+用途：基金经理信息。
 
 ### fund_aum_em
 
-描述：东方财富-基金公司管理规模排名
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_aum_em()
-```
-
-### fund_scale_change_em
-
-描述：东方财富-基金规模变动
-
-输入参数：
-
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 基金代码 |
-
-```python
-import akshare as ak
-df = ak.fund_scale_change_em(symbol="110011")
-```
-
----
-
-## 基金分红
-
-### fund_fh_em
-
-描述：东方财富-基金分红数据
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_fh_em()
-```
-
----
-
-## 基金评级
-
-### fund_rating_all
-
-描述：天天基金-基金评级（综合）
-
-输入参数：无
-
-```python
-import akshare as ak
-df = ak.fund_rating_all()
-```
-
----
-
-## 基金估值
+用途：基金公司规模数据。
 
 ### fund_value_estimation_em
 
-描述：东方财富-基金估值（盘中实时估算净值）
+用途：基金估算净值。
 
-输入参数：
+## 常见坑
 
-| 名称 | 类型 | 描述 |
-|------|------|------|
-| symbol | str | 基金代码 |
-
-```python
-import akshare as ak
-df = ak.fund_value_estimation_em(symbol="110011")
-```
+1. ETF 盘中价格和开放式基金净值不是同一口径。
+2. 持仓披露存在报告期滞后。
+3. 排行数据适合做筛字段，不代表长期稳定性。
+4. 部分接口返回的是全量表，需要先筛字段再输出。

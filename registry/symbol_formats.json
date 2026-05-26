@@ -1,0 +1,166 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-05-26",
+  "description": "AKShare 高频接口常见 symbol 格式说明。",
+  "formats": [
+    {
+      "name": "a_share_plain",
+      "pattern": "600519",
+      "description": "A 股纯数字代码，常用于股票行情和历史数据接口。",
+      "examples": [
+        "600519",
+        "000001",
+        "300750"
+      ],
+      "used_by": [
+        "stock_zh_a_hist",
+        "stock_zh_a_hist_min_em",
+        "stock_individual_info_em"
+      ]
+    },
+    {
+      "name": "a_share_prefixed_upper",
+      "pattern": "SH600519",
+      "description": "带市场前缀的大写 A 股代码，常用于东财财务接口。",
+      "examples": [
+        "SH600519",
+        "SZ000001",
+        "SZ300750"
+      ],
+      "used_by": [
+        "stock_financial_analysis_indicator_em",
+        "stock_profit_sheet_by_report_em",
+        "stock_balance_sheet_by_report_em",
+        "stock_cash_flow_sheet_by_report_em"
+      ]
+    },
+    {
+      "name": "a_share_prefixed_lower",
+      "pattern": "sh000001",
+      "description": "带市场前缀的小写代码，常用于部分指数和债券历史接口。",
+      "examples": [
+        "sh000001",
+        "sz399001",
+        "sz128039"
+      ],
+      "used_by": [
+        "stock_zh_index_daily",
+        "bond_zh_hs_cov_daily"
+      ]
+    },
+    {
+      "name": "index_plain",
+      "pattern": "000300",
+      "description": "纯数字指数代码，常用于指数历史和成份股接口。",
+      "examples": [
+        "000001",
+        "399001",
+        "000300"
+      ],
+      "used_by": [
+        "index_zh_a_hist",
+        "index_stock_cons",
+        "index_stock_cons_weight_csindex"
+      ]
+    },
+    {
+      "name": "fund_plain",
+      "pattern": "510300",
+      "description": "基金或 ETF 纯数字代码。",
+      "examples": [
+        "510300",
+        "159915",
+        "110011"
+      ],
+      "used_by": [
+        "fund_open_fund_info_em",
+        "fund_etf_hist_em",
+        "fund_portfolio_hold_em",
+        "fund_manager_em"
+      ]
+    },
+    {
+      "name": "futures_contract",
+      "pattern": "RB2501",
+      "description": "期货单合约代码，通常为品种加到期月份。",
+      "examples": [
+        "RB2501",
+        "AU2412",
+        "IF2503"
+      ],
+      "used_by": [
+        "futures_zh_daily_sina",
+        "futures_zh_minute_sina"
+      ]
+    },
+    {
+      "name": "futures_main_contract",
+      "pattern": "RB0",
+      "description": "主力连续合约代码。",
+      "examples": [
+        "RB0",
+        "AU0",
+        "IF0"
+      ],
+      "used_by": [
+        "futures_main_sina"
+      ]
+    },
+    {
+      "name": "fx_pair_upper",
+      "pattern": "USDCNH",
+      "description": "外汇货币对大写代码。",
+      "examples": [
+        "USDCNH",
+        "EURUSD",
+        "USDJPY"
+      ],
+      "used_by": [
+        "forex_hist_em"
+      ]
+    },
+    {
+      "name": "human_readable_market_name",
+      "pattern": "全国",
+      "description": "以中文市场名称作为参数，而不是代码。",
+      "examples": [
+        "全国",
+        "湖北",
+        "广东",
+        "美元",
+        "欧元"
+      ],
+      "used_by": [
+        "energy_carbon_domestic",
+        "currency_boc_safe"
+      ]
+    },
+    {
+      "name": "sge_symbol",
+      "pattern": "Au99.99",
+      "description": "上海黄金交易所品种代码。",
+      "examples": [
+        "Au99.99",
+        "Ag(T+D)",
+        "Au(T+D)"
+      ],
+      "used_by": [
+        "spot_quotations_sge",
+        "spot_hist_sge"
+      ]
+    },
+    {
+      "name": "spot_goods_name_cn",
+      "pattern": "螺纹钢",
+      "description": "现货走势接口使用中文品种名称。",
+      "examples": [
+        "螺纹钢",
+        "热卷",
+        "焦煤"
+      ],
+      "used_by": [
+        "spot_price_qh"
+      ]
+    }
+  ]
+}
