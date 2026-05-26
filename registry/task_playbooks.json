@@ -1,0 +1,246 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-05-26",
+  "description": "高频投资分析任务剧本。优先按任务目标选择剧本，再映射接口与文档。",
+  "playbooks": [
+    {
+      "task_type": "quick_quote",
+      "aliases": [
+        "现在多少钱",
+        "最新价格",
+        "今日涨跌",
+        "实时行情"
+      ],
+      "goal": "快速回答单个标的或指数的现价、涨跌幅、成交额等关键信息。",
+      "required_dimensions": [
+        "realtime_price"
+      ],
+      "preferred_docs": [
+        "docs/stock.md",
+        "docs/index.md",
+        "docs/fund.md"
+      ],
+      "primary_interfaces": [
+        "stock_zh_a_spot_em",
+        "stock_zh_index_spot_em",
+        "fund_etf_spot_em",
+        "fund_lof_spot_em"
+      ],
+      "fallback_interfaces": [
+        "stock_zh_a_hist",
+        "index_zh_a_hist",
+        "fund_etf_hist_em",
+        "fund_open_fund_info_em"
+      ],
+      "output_sections": [
+        "一句话结论",
+        "关键数据",
+        "数据时点"
+      ]
+    },
+    {
+      "task_type": "single_stock_decision",
+      "aliases": [
+        "值得买吗",
+        "该不该买",
+        "该不该持有",
+        "要不要减仓",
+        "综合分析个股"
+      ],
+      "goal": "围绕单只股票给出方向性判断和条件化建议。",
+      "required_dimensions": [
+        "trend",
+        "valuation_or_fundamental",
+        "sentiment_or_capital_flow"
+      ],
+      "preferred_docs": [
+        "docs/stock.md",
+        "docs/technical_analysis.md",
+        "docs/fundamental_analysis.md",
+        "docs/news_sentiment.md"
+      ],
+      "primary_interfaces": [
+        "stock_zh_a_spot_em",
+        "stock_zh_a_hist",
+        "stock_financial_analysis_indicator_em",
+        "stock_comment_em",
+        "stock_individual_fund_flow_rank"
+      ],
+      "fallback_interfaces": [
+        "stock_profit_sheet_by_report_em",
+        "stock_balance_sheet_by_report_em",
+        "stock_cash_flow_sheet_by_report_em",
+        "stock_notice_report",
+        "stock_news_em"
+      ],
+      "output_sections": [
+        "一句话结论",
+        "核心证据",
+        "反方证据",
+        "操作建议",
+        "置信度",
+        "失效条件"
+      ]
+    },
+    {
+      "task_type": "market_regime",
+      "aliases": [
+        "大盘怎么看",
+        "市场风格",
+        "指数走势",
+        "当前环境"
+      ],
+      "goal": "判断指数或市场环境的阶段状态，识别偏多、偏空或震荡。",
+      "required_dimensions": [
+        "index_trend",
+        "macro_or_rate",
+        "fund_flow_or_sentiment"
+      ],
+      "preferred_docs": [
+        "docs/index.md",
+        "docs/macro.md",
+        "docs/news_sentiment.md",
+        "docs/technical_analysis.md"
+      ],
+      "primary_interfaces": [
+        "stock_zh_index_spot_em",
+        "index_zh_a_hist",
+        "macro_china_gdp",
+        "macro_china_cpi",
+        "macro_china_pmi",
+        "macro_china_lpr",
+        "macro_china_shibor_all",
+        "stock_sector_fund_flow_rank"
+      ],
+      "fallback_interfaces": [
+        "stock_board_concept_spot_em",
+        "stock_hot_rank_em"
+      ],
+      "output_sections": [
+        "市场结论",
+        "趋势证据",
+        "宏观背景",
+        "资金与情绪",
+        "关注方向"
+      ]
+    },
+    {
+      "task_type": "stock_screening",
+      "aliases": [
+        "帮我选股",
+        "筛选股票",
+        "低估值",
+        "高成长",
+        "强势股"
+      ],
+      "goal": "根据明确条件筛选候选股票，并解释入选原因。",
+      "required_dimensions": [
+        "screening_rules",
+        "ranking_metric",
+        "explanation"
+      ],
+      "preferred_docs": [
+        "docs/stock_screening.md",
+        "docs/technical_analysis.md",
+        "docs/fundamental_analysis.md"
+      ],
+      "primary_interfaces": [
+        "stock_zh_a_spot_em",
+        "stock_zh_a_hist",
+        "stock_financial_analysis_indicator_em",
+        "stock_sector_fund_flow_rank",
+        "stock_lhb_detail_em"
+      ],
+      "fallback_interfaces": [
+        "stock_lhb_stock_statistic_em",
+        "stock_board_concept_spot_em",
+        "stock_individual_fund_flow_rank"
+      ],
+      "output_sections": [
+        "筛选逻辑",
+        "候选列表",
+        "入选原因",
+        "需继续验证的风险"
+      ]
+    },
+    {
+      "task_type": "fund_selection",
+      "aliases": [
+        "基金怎么选",
+        "基金排行",
+        "ETF 对比",
+        "基金值得买吗"
+      ],
+      "goal": "比较基金或 ETF 的收益、规模、持仓和风格，给出排序或选择建议。",
+      "required_dimensions": [
+        "performance",
+        "portfolio_or_scale",
+        "style_fit"
+      ],
+      "preferred_docs": [
+        "docs/fund.md"
+      ],
+      "primary_interfaces": [
+        "fund_name_em",
+        "fund_open_fund_info_em",
+        "fund_open_fund_daily_em",
+        "fund_etf_spot_em",
+        "fund_etf_hist_em",
+        "fund_portfolio_hold_em",
+        "fund_manager_em"
+      ],
+      "fallback_interfaces": [
+        "fund_open_fund_rank_em",
+        "fund_exchange_rank_em",
+        "fund_aum_em",
+        "fund_value_estimation_em"
+      ],
+      "output_sections": [
+        "推荐顺序",
+        "关键差异",
+        "适合场景",
+        "主要风险"
+      ]
+    },
+    {
+      "task_type": "macro_environment",
+      "aliases": [
+        "宏观环境",
+        "经济形势",
+        "利率怎么看",
+        "通胀如何"
+      ],
+      "goal": "用宏观指标解释风险偏好、经济周期和资产环境。",
+      "required_dimensions": [
+        "growth",
+        "inflation",
+        "liquidity_or_rate"
+      ],
+      "preferred_docs": [
+        "docs/macro.md",
+        "docs/interest_rate.md",
+        "docs/fx.md"
+      ],
+      "primary_interfaces": [
+        "macro_china_gdp",
+        "macro_china_cpi",
+        "macro_china_ppi",
+        "macro_china_pmi",
+        "macro_china_lpr",
+        "macro_china_shibor_all",
+        "macro_china_money_supply"
+      ],
+      "fallback_interfaces": [
+        "macro_china_exports_yoy",
+        "macro_china_imports_yoy",
+        "macro_china_fx_reserves_yearly"
+      ],
+      "output_sections": [
+        "宏观判断",
+        "核心指标",
+        "对市场的含义",
+        "关注拐点"
+      ]
+    }
+  ]
+}

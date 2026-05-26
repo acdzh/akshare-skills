@@ -1,0 +1,919 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-05-26",
+  "description": "高频 AKShare 接口目录。用于任务到接口的快速映射、参数校验和降级决策。",
+  "interfaces": [
+    {
+      "function": "stock_zh_a_spot_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "quick_quote",
+        "single_stock_decision",
+        "stock_screening"
+      ],
+      "symbol_format": "无单只 symbol，返回 A 股全市场快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅",
+        "成交额",
+        "换手率",
+        "市盈率-动态",
+        "市净率",
+        "总市值"
+      ],
+      "freshness": "盘中实时快照；收盘后更完整。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中数据会变化",
+        "字段口径可能随源站变化",
+        "适合先粗筛，不适合直接下结论"
+      ],
+      "fallback": [
+        "stock_zh_a_hist"
+      ]
+    },
+    {
+      "function": "stock_zh_a_hist",
+      "asset_class": "stock",
+      "scenarios": [
+        "quick_quote",
+        "single_stock_decision",
+        "stock_screening",
+        "technical_analysis"
+      ],
+      "symbol_format": "A 股常用纯数字代码，例如 600519。",
+      "date_format": "start_date/end_date 常用 YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "最高",
+        "最低",
+        "成交量",
+        "成交额",
+        "振幅",
+        "涨跌幅"
+      ],
+      "freshness": "日频历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "做收益率和技术指标时优先前复权",
+        "非交易日无数据",
+        "新股历史长度可能不足"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_financial_analysis_indicator_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "single_stock_decision",
+        "fundamental_analysis",
+        "stock_screening"
+      ],
+      "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
+      "date_format": "按报告期，无显式日期参数。",
+      "key_fields": [
+        "EPSJB",
+        "TOTALOPERATEREVETZ",
+        "PARENTNETPROFITTZ",
+        "ROEJQ",
+        "XSMLL",
+        "XSJLL",
+        "ZCFZL"
+      ],
+      "freshness": "财报披露频率，存在报告期滞后。",
+      "cost": "medium",
+      "pitfalls": [
+        "不是实时经营数据",
+        "symbol 格式容易写错",
+        "字段名较长且口径偏数据源原名"
+      ],
+      "fallback": [
+        "stock_profit_sheet_by_report_em",
+        "stock_balance_sheet_by_report_em",
+        "stock_cash_flow_sheet_by_report_em"
+      ]
+    },
+    {
+      "function": "stock_profit_sheet_by_report_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_analysis",
+        "single_stock_decision"
+      ],
+      "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
+      "date_format": "按报告期，无显式日期参数。",
+      "key_fields": [
+        "REPORT_DATE",
+        "TOTAL_OPERATE_INCOME",
+        "OPERATE_PROFIT",
+        "NETPROFIT"
+      ],
+      "freshness": "财报披露频率。",
+      "cost": "medium",
+      "pitfalls": [
+        "字段可能因数据源更新而变化",
+        "更适合做补充验证而非唯一依据"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_balance_sheet_by_report_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_analysis",
+        "single_stock_decision"
+      ],
+      "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
+      "date_format": "按报告期，无显式日期参数。",
+      "key_fields": [
+        "REPORT_DATE",
+        "TOTAL_ASSETS",
+        "TOTAL_LIABILITIES",
+        "ASSET_LIAB_RATIO"
+      ],
+      "freshness": "财报披露频率。",
+      "cost": "medium",
+      "pitfalls": [
+        "财务杠杆判断要结合行业特性",
+        "不能孤立使用单期值"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_cash_flow_sheet_by_report_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "fundamental_analysis",
+        "single_stock_decision"
+      ],
+      "symbol_format": "需要 SH/SZ 前缀，例如 SH600519。",
+      "date_format": "按报告期，无显式日期参数。",
+      "key_fields": [
+        "REPORT_DATE",
+        "NETCASH_OPERATE",
+        "NETCASH_INVEST",
+        "NETCASH_FINANCE"
+      ],
+      "freshness": "财报披露频率。",
+      "cost": "medium",
+      "pitfalls": [
+        "字段口径适合做质量验证，不适合独立判断趋势"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_comment_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "single_stock_decision",
+        "sentiment_analysis"
+      ],
+      "symbol_format": "无单只 symbol，返回全量评论快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "综合得分",
+        "目前排名",
+        "机构参与度"
+      ],
+      "freshness": "偏短期情绪口径。",
+      "cost": "low",
+      "pitfalls": [
+        "适合辅助，不宜作为单一结论来源",
+        "情绪变化快"
+      ],
+      "fallback": [
+        "stock_news_em",
+        "stock_notice_report"
+      ]
+    },
+    {
+      "function": "stock_news_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "single_stock_decision",
+        "sentiment_analysis"
+      ],
+      "symbol_format": "通常使用个股代码。",
+      "date_format": "以数据源返回为准。",
+      "key_fields": [
+        "关键词",
+        "新闻标题",
+        "发布时间",
+        "文章来源"
+      ],
+      "freshness": "新闻流，时效性高。",
+      "cost": "medium",
+      "pitfalls": [
+        "新闻噪音较大",
+        "需要和价格、资金流交叉验证"
+      ],
+      "fallback": [
+        "stock_notice_report"
+      ]
+    },
+    {
+      "function": "stock_notice_report",
+      "asset_class": "stock",
+      "scenarios": [
+        "single_stock_decision",
+        "sentiment_analysis"
+      ],
+      "symbol_format": "按文档要求传参。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "代码",
+        "名称",
+        "公告标题",
+        "公告类型",
+        "公告日期"
+      ],
+      "freshness": "公告流。",
+      "cost": "medium",
+      "pitfalls": [
+        "公告事件强相关，但需要人工归因",
+        "筛选日期时要注意范围"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_individual_fund_flow_rank",
+      "asset_class": "stock",
+      "scenarios": [
+        "single_stock_decision",
+        "stock_screening",
+        "market_regime"
+      ],
+      "symbol_format": "无单只 symbol，通过 indicator 选择时间窗。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "主力净流入-净额",
+        "主力净流入-净占比"
+      ],
+      "freshness": "短中期资金流快照。",
+      "cost": "low",
+      "pitfalls": [
+        "短期波动大",
+        "更适合做确认信号"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_sector_fund_flow_rank",
+      "asset_class": "market",
+      "scenarios": [
+        "market_regime",
+        "stock_screening"
+      ],
+      "symbol_format": "通过 indicator 和 sector_type 选择口径。",
+      "date_format": "无",
+      "key_fields": [
+        "名称",
+        "涨跌幅",
+        "主力净流入",
+        "板块名称"
+      ],
+      "freshness": "短期行业/概念资金流。",
+      "cost": "low",
+      "pitfalls": [
+        "行业和概念口径不同",
+        "板块轮动速度快"
+      ],
+      "fallback": [
+        "stock_board_concept_spot_em"
+      ]
+    },
+    {
+      "function": "stock_board_concept_spot_em",
+      "asset_class": "market",
+      "scenarios": [
+        "market_regime",
+        "stock_screening"
+      ],
+      "symbol_format": "无单只 symbol，返回概念板块快照。",
+      "date_format": "无",
+      "key_fields": [
+        "板块名称",
+        "涨跌幅",
+        "总市值",
+        "换手率"
+      ],
+      "freshness": "盘中概念板块快照。",
+      "cost": "low",
+      "pitfalls": [
+        "概念题材容易受消息刺激",
+        "不代表可持续性"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_zh_index_spot_em",
+      "asset_class": "index",
+      "scenarios": [
+        "quick_quote",
+        "market_regime"
+      ],
+      "symbol_format": "无单只 symbol，返回指数快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅",
+        "成交额"
+      ],
+      "freshness": "盘中实时快照。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中数据会变化"
+      ],
+      "fallback": [
+        "index_zh_a_hist"
+      ]
+    },
+    {
+      "function": "index_zh_a_hist",
+      "asset_class": "index",
+      "scenarios": [
+        "market_regime",
+        "technical_analysis"
+      ],
+      "symbol_format": "指数代码，例如 000300。",
+      "date_format": "常用 YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "成交量",
+        "涨跌幅"
+      ],
+      "freshness": "日频历史指数行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "不同指数代码规则不同",
+        "分析时最好配合现货快照和宏观数据"
+      ],
+      "fallback": [
+        "stock_zh_index_daily"
+      ]
+    },
+    {
+      "function": "fund_name_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "无参数或按接口文档过滤。",
+      "date_format": "无",
+      "key_fields": [
+        "基金代码",
+        "基金简称",
+        "基金类型"
+      ],
+      "freshness": "基金基础信息。",
+      "cost": "low",
+      "pitfalls": [
+        "适合检索基金，不适合独立做收益判断"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_open_fund_info_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "基金代码。",
+      "date_format": "接口定义的 indicator 口径。",
+      "key_fields": [
+        "净值日期",
+        "单位净值",
+        "累计净值",
+        "日增长率"
+      ],
+      "freshness": "开放式基金净值与表现。",
+      "cost": "medium",
+      "pitfalls": [
+        "净值是日频或更低频，不是盘中交易价"
+      ],
+      "fallback": [
+        "fund_open_fund_daily_em"
+      ]
+    },
+    {
+      "function": "fund_etf_spot_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "quick_quote",
+        "fund_selection"
+      ],
+      "symbol_format": "无单只 symbol，返回 ETF 快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅",
+        "成交额"
+      ],
+      "freshness": "盘中 ETF 快照。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中价格和基金净值不是同一口径"
+      ],
+      "fallback": [
+        "fund_etf_hist_em"
+      ]
+    },
+    {
+      "function": "fund_portfolio_hold_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "基金代码。",
+      "date_format": "按报告期披露。",
+      "key_fields": [
+        "股票代码",
+        "股票名称",
+        "持仓市值",
+        "占净值比例"
+      ],
+      "freshness": "基金持仓披露口径，存在滞后。",
+      "cost": "medium",
+      "pitfalls": [
+        "持仓不是实时仓位",
+        "风格判断要考虑披露滞后"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_gdp",
+      "asset_class": "macro",
+      "scenarios": [
+        "market_regime",
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "预测值",
+        "前值"
+      ],
+      "freshness": "宏观发布频率。",
+      "cost": "low",
+      "pitfalls": [
+        "宏观指标发布频率低，不能解释所有短期波动"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_cpi",
+      "asset_class": "macro",
+      "scenarios": [
+        "market_regime",
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "预测值",
+        "前值"
+      ],
+      "freshness": "月频宏观指标。",
+      "cost": "low",
+      "pitfalls": [
+        "要和 PPI、利率环境一起看"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_pmi",
+      "asset_class": "macro",
+      "scenarios": [
+        "market_regime",
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "预测值",
+        "前值"
+      ],
+      "freshness": "月频宏观指标。",
+      "cost": "low",
+      "pitfalls": [
+        "景气度判断要看连续性，不要只看单月"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_lpr",
+      "asset_class": "macro",
+      "scenarios": [
+        "market_regime",
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "1Y",
+        "5Y"
+      ],
+      "freshness": "利率政策口径。",
+      "cost": "low",
+      "pitfalls": [
+        "利率影响存在时滞，需要结合信用和风险偏好"
+      ],
+      "fallback": [
+        "macro_china_shibor_all"
+      ]
+    },
+    {
+      "function": "macro_china_shibor_all",
+      "asset_class": "macro",
+      "scenarios": [
+        "market_regime",
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "隔夜",
+        "1周",
+        "1月"
+      ],
+      "freshness": "资金面利率。",
+      "cost": "low",
+      "pitfalls": [
+        "偏流动性指标，需要和权益市场表现交叉验证"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_lof_spot_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "quick_quote",
+        "fund_selection"
+      ],
+      "symbol_format": "无单只 symbol，返回 LOF 快照。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "最新价",
+        "涨跌幅",
+        "成交额"
+      ],
+      "freshness": "盘中 LOF 快照。",
+      "cost": "low",
+      "pitfalls": [
+        "盘中成交价与净值口径不同"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_etf_hist_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "quick_quote",
+        "fund_selection"
+      ],
+      "symbol_format": "ETF 代码。",
+      "date_format": "常用 YYYYMMDD。",
+      "key_fields": [
+        "日期",
+        "开盘",
+        "收盘",
+        "成交量",
+        "涨跌幅"
+      ],
+      "freshness": "ETF 历史行情。",
+      "cost": "medium",
+      "pitfalls": [
+        "适合趋势分析，不等同于基金净值分析"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_open_fund_daily_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "开放式基金代码或接口指定口径。",
+      "date_format": "以接口参数为准。",
+      "key_fields": [
+        "基金代码",
+        "基金简称",
+        "单位净值",
+        "累计净值",
+        "日增长率"
+      ],
+      "freshness": "开放式基金日频数据。",
+      "cost": "low",
+      "pitfalls": [
+        "更适合横向比较，不能代替持仓风格分析"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_manager_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "接口参数按文档定义。",
+      "date_format": "无",
+      "key_fields": [
+        "基金经理",
+        "所属公司",
+        "现任基金资产总规模",
+        "现任基金最佳回报"
+      ],
+      "freshness": "基金经理画像。",
+      "cost": "low",
+      "pitfalls": [
+        "经理历史业绩不能简单外推到未来"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_open_fund_rank_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "通过参数指定区间和类型。",
+      "date_format": "以接口定义的统计窗口为准。",
+      "key_fields": [
+        "基金代码",
+        "基金简称",
+        "近1周",
+        "近1月",
+        "近1年"
+      ],
+      "freshness": "区间收益排行。",
+      "cost": "low",
+      "pitfalls": [
+        "排行榜易受短期风格影响"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_exchange_rank_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "通过接口参数指定排行口径。",
+      "date_format": "以接口定义为准。",
+      "key_fields": [
+        "基金代码",
+        "基金简称",
+        "近1周",
+        "近1月",
+        "近1年"
+      ],
+      "freshness": "场内基金排行。",
+      "cost": "low",
+      "pitfalls": [
+        "排名口径需和基金类型匹配"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_aum_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "按文档口径查询。",
+      "date_format": "以接口返回为准。",
+      "key_fields": [
+        "基金公司",
+        "管理规模",
+        "基金数量"
+      ],
+      "freshness": "基金公司规模画像。",
+      "cost": "low",
+      "pitfalls": [
+        "公司规模不直接等于单只基金质量"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "fund_value_estimation_em",
+      "asset_class": "fund",
+      "scenarios": [
+        "fund_selection"
+      ],
+      "symbol_format": "按文档参数查询。",
+      "date_format": "无",
+      "key_fields": [
+        "基金代码",
+        "基金名称",
+        "估算净值",
+        "估算涨跌幅"
+      ],
+      "freshness": "盘中基金估算值。",
+      "cost": "low",
+      "pitfalls": [
+        "估算值不是正式净值"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_hot_rank_em",
+      "asset_class": "market",
+      "scenarios": [
+        "market_regime",
+        "sentiment_analysis"
+      ],
+      "symbol_format": "无单只 symbol，返回热度排行。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "股票名称",
+        "最新价",
+        "涨跌额",
+        "涨跌幅"
+      ],
+      "freshness": "短期热度快照。",
+      "cost": "low",
+      "pitfalls": [
+        "热度不是基本面",
+        "容易受到短线情绪放大"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "stock_lhb_detail_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "stock_screening",
+        "sentiment_analysis"
+      ],
+      "symbol_format": "通过 start_date/end_date 查询。",
+      "date_format": "YYYYMMDD。",
+      "key_fields": [
+        "代码",
+        "名称",
+        "龙虎榜净买额",
+        "龙虎榜买入额",
+        "龙虎榜卖出额"
+      ],
+      "freshness": "日度龙虎榜明细。",
+      "cost": "medium",
+      "pitfalls": [
+        "事件驱动强，持续性不稳定"
+      ],
+      "fallback": [
+        "stock_lhb_stock_statistic_em"
+      ]
+    },
+    {
+      "function": "stock_lhb_stock_statistic_em",
+      "asset_class": "stock",
+      "scenarios": [
+        "stock_screening",
+        "sentiment_analysis"
+      ],
+      "symbol_format": "通过 symbol 指定近一月、近三月等时间窗。",
+      "date_format": "无",
+      "key_fields": [
+        "代码",
+        "名称",
+        "上榜次数",
+        "累计涨跌幅"
+      ],
+      "freshness": "阶段性龙虎榜统计。",
+      "cost": "low",
+      "pitfalls": [
+        "容易偏向高波动标的"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_ppi",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "预测值",
+        "前值"
+      ],
+      "freshness": "月频宏观指标。",
+      "cost": "low",
+      "pitfalls": [
+        "要和 CPI 一起看价格链条"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_money_supply",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "月份",
+        "M2-同比",
+        "M1-同比",
+        "M0-同比"
+      ],
+      "freshness": "月频流动性指标。",
+      "cost": "low",
+      "pitfalls": [
+        "货币增速对资产价格影响存在时滞"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_exports_yoy",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "预测值",
+        "前值"
+      ],
+      "freshness": "月频外贸指标。",
+      "cost": "low",
+      "pitfalls": [
+        "出口数据受季节性与基数影响"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_imports_yoy",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "预测值",
+        "前值"
+      ],
+      "freshness": "月频外贸指标。",
+      "cost": "low",
+      "pitfalls": [
+        "进口数据对内需判断更有参考意义"
+      ],
+      "fallback": []
+    },
+    {
+      "function": "macro_china_fx_reserves_yearly",
+      "asset_class": "macro",
+      "scenarios": [
+        "macro_environment"
+      ],
+      "symbol_format": "无",
+      "date_format": "由接口返回历史序列。",
+      "key_fields": [
+        "日期",
+        "今值",
+        "前值"
+      ],
+      "freshness": "外汇储备指标。",
+      "cost": "low",
+      "pitfalls": [
+        "适合做背景判断，不适合解释短线行情"
+      ],
+      "fallback": []
+    }
+  ]
+}
