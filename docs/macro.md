@@ -2,9 +2,11 @@
 
 本文件仅说明宏观指标、利率和外贸数据如何获取，以及常见指标的基本口径。
 
+> 规则：优先使用非东方财富来源接口；若同主题只有东方财富可用，才将东方财富接口作为回退或兜底选择。
+
 ## 任务路由
 
-| 数据需求 | 目标 | 优先接口 |
+| 数据需求 | 目标 | 候选接口（优先非东财） |
 |------|------|----------|
 | 增长数据 | GDP、PMI、工业生产、消费、投资 | `macro_china_gdp` / `macro_china_pmi` / `macro_china_industrial_production_yoy` |
 | 通胀数据 | CPI、PPI | `macro_china_cpi` / `macro_china_ppi` |

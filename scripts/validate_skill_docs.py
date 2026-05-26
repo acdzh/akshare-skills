@@ -60,6 +60,9 @@ FORBIDDEN_SCAN_FILES = [
 ] + [ROOT / relative_path for relative_path in DOC_EXPECTATIONS]
 
 
+EXPECTED_SELECTION_POLICY = "优先使用非东方财富来源接口"
+
+
 def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as file:
         return json.load(file)
@@ -259,6 +262,22 @@ def validate_forbidden_text() -> list[str]:
     return errors
 
 
+def validate_source_policy() -> list[str]:
+    errors: list[str] = []
+    require(EXPECTED_SELECTION_POLICY in load_text(ROOT / "SKILL.md"), "SKILL.md 缺少非东方财富优先规则", errors)
+
+    task_data = load_json(TASK_PLAYBOOKS)
+    require(EXPECTED_SELECTION_POLICY in str(task_data.get("selection_policy", "")), "task_playbooks.json 缺少非东方财富优先规则", errors)
+
+    interface_data = load_json(INTERFACE_CATALOG)
+    require(EXPECTED_SELECTION_POLICY in str(interface_data.get("selection_policy", "")), "interface_catalog.json 缺少非东方财富优先规则", errors)
+
+    for relative_path in DOC_EXPECTATIONS:
+        content = load_text(ROOT / relative_path)
+        require(EXPECTED_SELECTION_POLICY in content, f"{relative_path} 缺少非东方财富优先规则", errors)
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate AKShare skill registries.")
     parser.add_argument("--strict-interfaces", action="store_true", help="将运行时缺失接口视为错误而不是警告。")
@@ -284,6 +303,7 @@ def main() -> int:
     structural_errors.extend(validate_docs_structure())
     structural_errors.extend(validate_doc_interface_coverage(known_interfaces))
     structural_errors.extend(validate_forbidden_text())
+    structural_errors.extend(validate_source_policy())
 
     runtime_errors, runtime_warnings = validate_runtime_interfaces(interface_names, strict=args.strict_interfaces)
 
