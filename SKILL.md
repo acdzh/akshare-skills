@@ -8,6 +8,8 @@ keywords: "akshare, finance, stock, fund, futures, macro, indices, bonds, option
 
 当用户需要查询金融数据、历史序列、财务指标、消息资讯、基金信息、宏观指标等内容时，使用 [AKShare](https://github.com/akfamily/akshare) 获取并整理数据。此 skill 仅负责数据获取、字段说明、口径说明和必要的数据清洗，不负责行情解读、标的选择或图形输出。
 
+同主题若存在多个可选数据源，默认优先使用非东方财富来源接口；东方财富接口因稳定性较弱，不作为首选，仅在无稳定替代、需要特定字段或其他来源不可用时回退使用。
+
 ## 适用范围
 
 1. 行情快照：股票、指数、基金、期货、外汇、债券等。
@@ -68,7 +70,7 @@ print(ak.stock_zh_a_hist.__doc__)
 
 1. 先确定用户要的是哪类数据。
 2. 从 `registry/task_playbooks.json` 找对应的数据任务。
-3. 从 `registry/interface_catalog.json` 选高频接口。
+3. 从 `registry/interface_catalog.json` 选高频接口，并优先选择非东方财富来源。
 4. 编写一次性 Python 脚本拉取数据并做最小清洗。
 5. 输出关键字段、少量样例行或结构化摘要。
 

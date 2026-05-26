@@ -5,51 +5,167 @@
   "playbooks": [
     {
       "task_type": "market_snapshot",
-      "aliases": ["现在多少钱", "最新价格", "今日涨跌", "实时行情"],
+      "aliases": [
+        "现在多少钱",
+        "最新价格",
+        "今日涨跌",
+        "实时行情"
+      ],
       "goal": "获取股票、指数或基金的实时快照数据。",
-      "preferred_docs": ["docs/stock.md", "docs/index.md", "docs/fund.md"],
-      "primary_interfaces": ["stock_zh_a_spot_em", "stock_zh_index_spot_em", "fund_etf_spot_em", "fund_lof_spot_em"],
-      "fallback_interfaces": ["stock_zh_a_hist", "index_zh_a_hist", "fund_etf_hist_em", "fund_open_fund_info_em"]
+      "preferred_docs": [
+        "docs/stock.md",
+        "docs/index.md",
+        "docs/fund.md"
+      ],
+      "primary_interfaces": [
+        "stock_zh_a_spot_em",
+        "stock_zh_index_spot_em",
+        "fund_etf_spot_em",
+        "fund_lof_spot_em"
+      ],
+      "fallback_interfaces": [
+        "stock_zh_a_hist",
+        "index_zh_a_hist",
+        "fund_etf_hist_em",
+        "fund_open_fund_info_em"
+      ]
     },
     {
       "task_type": "price_history",
-      "aliases": ["历史走势", "K线数据", "历史行情", "区间价格"],
+      "aliases": [
+        "历史走势",
+        "K线数据",
+        "历史行情",
+        "区间价格"
+      ],
       "goal": "获取股票、指数、ETF 等标的的历史价格序列。",
-      "preferred_docs": ["docs/stock.md", "docs/index.md", "docs/fund.md", "docs/technical_analysis.md"],
-      "primary_interfaces": ["stock_zh_a_hist", "index_zh_a_hist", "fund_etf_hist_em"],
-      "fallback_interfaces": ["stock_zh_a_hist_min_em", "stock_zh_index_daily"]
+      "preferred_docs": [
+        "docs/stock.md",
+        "docs/index.md",
+        "docs/fund.md",
+        "docs/technical_analysis.md"
+      ],
+      "primary_interfaces": [
+        "stock_zh_a_hist",
+        "index_zh_a_hist",
+        "fund_etf_hist_em"
+      ],
+      "fallback_interfaces": [
+        "stock_zh_a_hist_min_em",
+        "stock_zh_index_daily"
+      ]
     },
     {
       "task_type": "fundamental_data",
-      "aliases": ["财务数据", "估值指标", "三大报表", "盈利预测"],
+      "aliases": [
+        "财务数据",
+        "估值指标",
+        "三大报表",
+        "盈利预测"
+      ],
       "goal": "获取个股财务指标、三表和估值相关原始字段。",
-      "preferred_docs": ["docs/fundamental_analysis.md", "docs/stock.md"],
-      "primary_interfaces": ["stock_financial_analysis_indicator_em", "stock_individual_info_em", "stock_profit_forecast_em"],
-      "fallback_interfaces": ["stock_profit_sheet_by_report_em", "stock_balance_sheet_by_report_em", "stock_cash_flow_sheet_by_report_em", "stock_financial_abstract"]
+      "preferred_docs": [
+        "docs/fundamental_analysis.md",
+        "docs/stock.md"
+      ],
+      "primary_interfaces": [
+        "stock_financial_analysis_indicator_em",
+        "stock_individual_info_em",
+        "stock_profit_forecast_em"
+      ],
+      "fallback_interfaces": [
+        "stock_profit_sheet_by_report_em",
+        "stock_balance_sheet_by_report_em",
+        "stock_cash_flow_sheet_by_report_em",
+        "stock_financial_abstract"
+      ]
     },
     {
       "task_type": "sentiment_data",
-      "aliases": ["新闻", "公告", "热度", "研报披露", "千股千评"],
+      "aliases": [
+        "新闻",
+        "公告",
+        "热度",
+        "研报披露",
+        "千股千评"
+      ],
       "goal": "获取新闻、公告、热度和情绪类原始数据。",
-      "preferred_docs": ["docs/news_sentiment.md"],
-      "primary_interfaces": ["stock_news_em", "stock_notice_report", "stock_comment_em", "stock_hot_rank_em"],
-      "fallback_interfaces": ["stock_report_disclosure", "stock_hot_rank_detail_em", "stock_hot_keyword_em", "stock_news_main_cx"]
+      "preferred_docs": [
+        "docs/news_sentiment.md"
+      ],
+      "primary_interfaces": [
+        "stock_news_em",
+        "stock_notice_report",
+        "stock_comment_em",
+        "stock_hot_rank_em"
+      ],
+      "fallback_interfaces": [
+        "stock_report_disclosure",
+        "stock_hot_rank_detail_em",
+        "stock_hot_keyword_em",
+        "stock_news_main_cx"
+      ]
     },
     {
       "task_type": "fund_data",
-      "aliases": ["基金净值", "ETF 数据", "基金持仓", "基金经理"],
+      "aliases": [
+        "基金净值",
+        "ETF 数据",
+        "基金持仓",
+        "基金经理"
+      ],
       "goal": "获取基金基础信息、净值、排行、持仓和经理数据。",
-      "preferred_docs": ["docs/fund.md"],
-      "primary_interfaces": ["fund_name_em", "fund_open_fund_info_em", "fund_open_fund_daily_em", "fund_etf_spot_em", "fund_etf_hist_em", "fund_portfolio_hold_em", "fund_manager_em"],
-      "fallback_interfaces": ["fund_open_fund_rank_em", "fund_exchange_rank_em", "fund_aum_em", "fund_value_estimation_em"]
+      "preferred_docs": [
+        "docs/fund.md"
+      ],
+      "primary_interfaces": [
+        "fund_name_em",
+        "fund_open_fund_info_em",
+        "fund_open_fund_daily_em",
+        "fund_etf_spot_em",
+        "fund_etf_hist_em",
+        "fund_portfolio_hold_em",
+        "fund_manager_em"
+      ],
+      "fallback_interfaces": [
+        "fund_open_fund_rank_em",
+        "fund_exchange_rank_em",
+        "fund_aum_em",
+        "fund_value_estimation_em"
+      ]
     },
     {
       "task_type": "macro_data",
-      "aliases": ["GDP", "CPI", "PPI", "PMI", "LPR", "SHIBOR", "宏观数据"],
+      "aliases": [
+        "GDP",
+        "CPI",
+        "PPI",
+        "PMI",
+        "LPR",
+        "SHIBOR",
+        "宏观数据"
+      ],
       "goal": "获取宏观、利率和外贸等原始指标。",
-      "preferred_docs": ["docs/macro.md", "docs/interest_rate.md", "docs/fx.md"],
-      "primary_interfaces": ["macro_china_gdp", "macro_china_cpi", "macro_china_ppi", "macro_china_pmi", "macro_china_lpr", "macro_china_shibor_all", "macro_china_money_supply"],
-      "fallback_interfaces": ["macro_china_exports_yoy", "macro_china_imports_yoy", "macro_china_fx_reserves_yearly"]
+      "preferred_docs": [
+        "docs/macro.md",
+        "docs/interest_rate.md",
+        "docs/fx.md"
+      ],
+      "primary_interfaces": [
+        "macro_china_gdp",
+        "macro_china_cpi",
+        "macro_china_ppi",
+        "macro_china_pmi",
+        "macro_china_lpr",
+        "macro_china_shibor_all",
+        "macro_china_money_supply"
+      ],
+      "fallback_interfaces": [
+        "macro_china_exports_yoy",
+        "macro_china_imports_yoy",
+        "macro_china_fx_reserves_yearly"
+      ]
     }
-  ]
+  ],
+  "selection_policy": "同主题若存在多个可选数据源，默认优先使用非东方财富来源接口；东方财富接口因稳定性较弱，不作为首选，仅在无稳定替代、需要特定字段或其他来源不可用时回退使用。"
 }
