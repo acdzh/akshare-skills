@@ -14,6 +14,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 TASK_PLAYBOOKS = ROOT / "registry" / "task_playbooks.json"
 INTERFACE_CATALOG = ROOT / "registry" / "interface_catalog.json"
+DOC_EXPECTATIONS = {
+    "docs/stock.md": ["## 任务路由", "## 高频接口", "## 结论输出建议", "## 常见坑"],
+    "docs/fund.md": ["## 任务路由", "## 高频接口", "## 结论输出建议", "## 常见坑"],
+    "docs/macro.md": ["## 任务路由", "## 高频接口", "## 结论输出建议", "## 常见坑"],
+}
 
 
 def load_json(path: Path) -> Any:
@@ -116,6 +121,19 @@ def validate_runtime_interfaces(interface_names: list[str], strict: bool) -> tup
     return errors, warnings
 
 
+def validate_docs_structure() -> list[str]:
+    errors: list[str] = []
+    for relative_path, headings in DOC_EXPECTATIONS.items():
+        doc_path = ROOT / relative_path
+        require(doc_path.exists(), f"缺少文档: {relative_path}", errors)
+        if not doc_path.exists():
+            continue
+        content = doc_path.read_text(encoding="utf-8")
+        for heading in headings:
+            require(heading in content, f"{relative_path} 缺少章节: {heading}", errors)
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate AKShare skill registries.")
     parser.add_argument(
@@ -139,6 +157,7 @@ def main() -> int:
     known_interfaces = set(interface_names)
     playbook_errors = validate_playbooks(task_data, known_interfaces)
     structural_errors.extend(playbook_errors)
+    structural_errors.extend(validate_docs_structure())
 
     runtime_errors, runtime_warnings = validate_runtime_interfaces(interface_names, strict=args.strict_interfaces)
 
